@@ -1,13 +1,55 @@
-var example = require('./js/example');
+var m   = require('mithril');
+
+/*
+   This CSS is now scoped to the things in this module via file-hash
+   and accessible via css.your_class_name;
+
+   This will output to site.css in dist/css as a bunch of classes with
+   unique prefixes (jkfjei32jlsd_example) (so they target whichever element you want perfectly)
+ */
+var css = require('./css/example.css');
 
 /*
   We require global CSS here without assigning because
-  it allows browserify to run the 'modular-css' plugin
-  which outputs a file that we link to through our site
+  it allows browserify to run the 'modular-css' plugin.
+  That plugin, while running, outputs a file that we link to through our site
+
+  This will output to site.css in dist/css as is
+  (no unique prefixes since it's required but unused)
+  modular-css sees this and it just gets placed into site.css untouched since
+  it isnt used.
 */
 require('./css/global.css');
 
-// Assign example to the global namespace so you can
-// see that it works.
-global.example = example;
-example.write('Writing in the console.')
+
+/*
+  Explanation of stackpack that appears in browser.
+  Note that this explanation is being rendered in a v-dom library
+  known as 'Mithril', If you're using another vdom library, they
+  should have similar paradigms for you to assign classes to a
+  virtual dom element.
+
+  I'm using the bracket syntax (css['heading']) because it looks more
+  like css does. You're free to do dot or bracket! No biggie!
+
+*/
+m.mount(document.body, {
+  view: function() {
+    return m('div', {class: css['container']},  [
+      m('h1', {class: css['heading']}, 'Welcome to Stackpack'),
+      m('p', {class: css['paragraph']}, [
+        'This is Stackpack! ',
+        'Its a boilerplate to use CSS classes in js, sort of like a fancy hash. ',
+        'by requiring CSS in a module, the classes of that CSS file are then scoped to that module. ',
+        'No more CSS collisions. If there are any, its definitely your fault '
+      ]),
+      m('p', {class: css['paragraph']}, [
+        'This is probably most useful to you if you want to do everything in javascript ',
+        'including using your css classes for things created in a Virtual Dom.'
+      ]),
+      m('p', {class: css['paragraph']}, [
+        'Using Mithril. Or React. or Vdom. Or. uh. Whatever. ',
+      ])
+    ])
+  }
+})

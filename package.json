@@ -13,6 +13,8 @@
     "browserify": "^13.0.0",
     "ecstatic": "^1.4.0",
     "express": "^4.13.4",
+    "minifyify": "^7.3.2",
+    "mithril": "^0.2.2-rc.1",
     "modular-css": "^0.12.2",
     "postcss-import": "^8.0.2",
     "shelljs": "^0.6.0",
