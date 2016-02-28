@@ -1,0 +1,16 @@
+{
+  "name": "stackpack",
+  "version": "1.0.0",
+  "description": "A project scaffolding tool using Browserify and Modular-css",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Bradley Stafford",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "express": "^4.13.4",
+    "watchify": "^3.7.0"
+  }
+}
