@@ -2,7 +2,6 @@ var fs         = require('fs'),
     browserify = require('browserify'),
     shell      = require('shelljs');
 
-console.log(process.env.NODE_ENV)
 
 var build = browserify("./src/entry.js", {
   debug: true
@@ -18,8 +17,6 @@ build.plugin("modular-css/browserify", {
 
     map: true
 });
-
-//build.plugin('minifyify');
 
 build.bundle(function(err, output) {
   var write = fs.writeFileSync;

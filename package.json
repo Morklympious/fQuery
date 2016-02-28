@@ -5,8 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "node build/bundle.js",
-    "server": "node build/server.js"
+    "develop": "node build/server.js"
   },
+  "keywords": [
+    "boilerplate",
+    "browserify",
+    "development"
+  ],
   "author": "Bradley Stafford",
   "license": "MIT",
   "devDependencies": {
