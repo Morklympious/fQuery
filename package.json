@@ -11,6 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^13.0.0",
+    "ecstatic": "^1.4.0",
     "express": "^4.13.4",
     "modular-css": "^0.12.2",
     "postcss-import": "^8.0.2",
