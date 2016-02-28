@@ -4,7 +4,7 @@
   "description": "A project scaffolding tool using Browserify and Modular-css",
   "main": "index.js",
   "scripts": {
-    "watch": "node build/bundle.js",
+    "build": "node build/bundle.js",
     "server": "node build/server.js"
   },
   "author": "Bradley Stafford",
@@ -15,6 +15,7 @@
     "express": "^4.13.4",
     "modular-css": "^0.12.2",
     "postcss-import": "^8.0.2",
+    "shelljs": "^0.6.0",
     "watchify": "^3.7.0"
   }
 }
