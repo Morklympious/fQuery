@@ -4,8 +4,9 @@
   "description": "A project scaffolding tool using Browserify and Modular-css",
   "main": "index.js",
   "scripts": {
-    "build": "node build-bundle.js",
-    "develop": "node build-server.js"
+    "build": "npm run lint && node build-bundle.js",
+    "develop": "node build-server.js",
+    "lint": "eslint src/"
   },
   "keywords": [
     "boilerplate",

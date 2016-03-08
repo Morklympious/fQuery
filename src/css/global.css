@@ -1,7 +1,7 @@
 /*
    This is global CSS. This will output to a file without a scope hash.
    You'll want to put all of your normalize, reset, etc. stuff in here
-   since you'll want everything to be able to read these styles. 
+   since you'll want everything to be able to read these styles.
 */
 
 * {

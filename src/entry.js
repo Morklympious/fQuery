@@ -1,5 +1,4 @@
-var m   = require('mithril');
-
+var m = require('mithril');
 
 /*
    This CSS is now scoped to the things in this module via file-hash
@@ -21,7 +20,6 @@ var css = require('./css/example.css');
 */
 require('./css/global.css');
 
-
 /*
   Explanation of stackpack that appears in browser.
   Note that this explanation is being rendered in a v-dom library
@@ -29,28 +27,30 @@ require('./css/global.css');
   should have similar paradigms for you to assign classes to a
   virtual dom element.
 
-  I'm using the bracket syntax (css['heading']) because it looks more
-  like css does. You're free to do dot or bracket! No biggie!
+  You're free to do dot or bracket! No biggie! Just make sure You
+  have ESLINT agree with you about it.
 
 */
-m.mount(document.body, {
+
+m.mount(global.document.body, {
   view: function() {
-    return m('div', {class: css['container']},  [
-      m('h1', {class: css['heading']}, 'Welcome to Stackpack'),
-      m('p', {class: css['paragraph']}, [
+    return m('div', {class: css.container}, [
+      m('h1', {class: css.heading}, 'Welcome to Stackpack'),
+      m('p', {class: css.paragraph}, [
         'This is Stackpack! ',
-        'Its a boilerplate to use CSS classes in js, sort of like a fancy hash. ',
-        'by requiring CSS in a module, the classes of that CSS file are then scoped to that module. ',
+        'Its a boilerplate to use CSS classes in js via file hash.',
+        'by requiring CSS in a module, ',
+        'the classes of that CSS file are scoped to that module. ',
         'No more CSS collisions. If there are any, its definitely your fault '
       ]),
-      m('p', {class: css['paragraph']}, [
-        'This is probably most useful to you if you want to do everything in javascript ',
+      m('p', {class: css.paragraph}, [
+        'This is probably most useful to you if you wanteverything in js ',
         'including using your css classes for things created in a Virtual Dom.'
       ]),
-      m('p', {class: css['paragraph']}, [
-        'Using Mithril. Or React. or Vdom. Or. uh. Whatever. ',
+      m('p', {class: css.paragraph}, [
+        'Using Mithril. Or React. or Vdom. Or. uh. Whatever. '
       ]),
       require('./js/explanation') // Works just fine via require, too!
-    ])
+    ]);
   }
-})
+});
