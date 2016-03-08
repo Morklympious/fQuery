@@ -1,7 +1,7 @@
 # Stackpack
 _What is this garbage?_ you say, staring into the void of this repository.
 
-Well, my friend, _this_ garbage is a boilerplate featuring Browserify and Modular CSS!
+Well, my friend, _this_ garbage is a boilerplate featuring [Browserify](http://browserify.org/) and [Modular CSS](https://github.com/tivac/modular-css)!
 
 A while back I wrote a boilerplate that used Webpack and allowed you to bundle your scripts
 in such a way that you wouldn't hate your life setting up a build process.
@@ -18,18 +18,18 @@ Pretty simple, actually!
 - `npm run lint` to run a fine-toothed comb through it via Eslint.
 
 ## Opinions
-- Browserify - It uses browserify to bundle stuff, and a few plugins to help you develop faster,
+- [Browserify](http://browserify.org/) - It uses browserify to bundle stuff, and a few plugins to help you develop faster,
 namely `watchify` for compile-on-save
 
-- Modular-CSS - Modular CSS because back in the day when I tried react, I was using javascript
+- [Modular CSS](https://github.com/tivac/modular-css) - Modular CSS because back in the day when I tried React.js, I was using js
 style properties and hooking them into a `style` attribute on a virtual dom element. This is
 a much cleaner, more familiar way of approaching that same obstacle.
 
-- Eslint - Because whatever dude, why don't you fight me about linting my code? It's currently set
+- [Eslint](http://eslint.org/) - Because whatever dude, why don't you fight me about linting my code? It's currently set
 to use the Google preset, but you can just as easily change that by `npm install`ing your favorite
 preset.
 
-- Mithril - Yes, this comes with Mithril. I included it simply because I think this sort of workflow is
+- [Mithril.js](http://mithril.js.org/) - Yes, this comes with Mithril. I included it simply because I think this sort of workflow is
 ideal for a virtual DOM library. You're free to swap it out for any Virtual DOM library of your choice.
 Maybe you're going to go rogue and you don't NEED a virtual DOM library, but honestly that's one of the
 things that makes Modular CSS so good in this build. You don't need a Virtual DOM? GET OUTTA HERE.
