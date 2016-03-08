@@ -1,5 +1,6 @@
 var m   = require('mithril');
 
+
 /*
    This CSS is now scoped to the things in this module via file-hash
    and accessible via css.your_class_name;
@@ -16,8 +17,7 @@ var css = require('./css/example.css');
 
   This will output to site.css in dist/css as is
   (no unique prefixes since it's required but unused)
-  modular-css sees this and it just gets placed into site.css untouched since
-  it isnt used.
+  modular-css sees this and it just gets placed into site.css untouched.
 */
 require('./css/global.css');
 
@@ -49,7 +49,8 @@ m.mount(document.body, {
       ]),
       m('p', {class: css['paragraph']}, [
         'Using Mithril. Or React. or Vdom. Or. uh. Whatever. ',
-      ])
+      ]),
+      require('./js/explanation') // Works just fine via require, too!
     ])
   }
 })
