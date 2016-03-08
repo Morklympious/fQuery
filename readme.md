@@ -14,7 +14,7 @@ Pretty simple, actually!
 
 - `npm install` for grabbing the dependencies.
 - `npm run build` to output your bundled scripts into the `dist` directory.
-- `npm run server` to watch your files, rebuild on save, and also run a server at `:8080`
+- `npm run develop` to watch your files, rebuild on save, and also run a server at `:8080`
 - `npm run lint` to run a fine-toothed comb through it via Eslint.
 
 ## Opinions
