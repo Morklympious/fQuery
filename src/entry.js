@@ -38,14 +38,14 @@ m.mount(global.document.body, {
       m('h1', {class: css.heading}, 'Welcome to Stackpack'),
       m('p', {class: css.paragraph}, [
         'This is Stackpack! ',
-        'Its a boilerplate to use CSS classes in js via file hash.',
+        'Its a boilerplate to use CSS classes in js via file hash. ',
         'by requiring CSS in a module, ',
         'the classes of that CSS file are scoped to that module. ',
         'No more CSS collisions. If there are any, its definitely your fault '
       ]),
       m('p', {class: css.paragraph}, [
         'This is probably most useful to you if you wanteverything in js ',
-        'including using your css classes for things created in a Virtual Dom.'
+        'including using your css classes for things created in a Virtual Dom. '
       ]),
       m('p', {class: css.paragraph}, [
         'Using Mithril. Or React. or Vdom. Or. uh. Whatever. '

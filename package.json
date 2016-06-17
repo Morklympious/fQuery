@@ -8,6 +8,10 @@
     "develop": "node build-server.js",
     "lint": "eslint src/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/morklympious/stackpack.git"
+  },
   "keywords": [
     "boilerplate",
     "browserify",
