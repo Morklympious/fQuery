@@ -2,7 +2,12 @@
    This is global CSS. This will output to a file without a scope hash.
    You'll want to put all of your normalize, reset, etc. stuff in here
    since you'll want everything to be able to read these styles.
+
+   Note: Add all of your @imports FIRST. Otherwise postcss-import won't do its job correctly.
 */
+
+/* Adding example just to show that import is possible */
+@import "example.css";
 
 * {
   font-family: sans-serif;

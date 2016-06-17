@@ -15,7 +15,10 @@ build.plugin("modular-css/browserify", {
     // Output CSS file with all of your fancy scoped classes.
     css : "./dist/css/site.css",
 
-    map: true
+    map: true,
+    after : [
+        require("postcss-import")
+    ]
 });
 
 build.bundle(function(err, output) {
