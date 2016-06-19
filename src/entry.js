@@ -33,7 +33,7 @@ require('./css/global.css');
 
 */
 
-m.mount(global.document.body, {
+m.mount(global.document.getElementById('mount'), {
   view: function() {
     return m('div', {class: css.container}, [
       m('h1', {class: css.heading}, 'Welcome to Stackpack'),
