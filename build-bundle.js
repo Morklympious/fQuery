@@ -1,6 +1,6 @@
-var fs         = require('fs'),
-    browserify = require('browserify'),
-    shell      = require('shelljs');
+var fs = require('fs'),
+  browserify = require('browserify'),
+  shell = require('shelljs');
 
 
 var build = browserify("./src/entry.js", {
@@ -13,17 +13,22 @@ shell.mkdir('-p', 'dist/css');
 build.plugin("modular-css/browserify", {
 
     // Output CSS file with all of your fancy scoped classes.
-    css : "./dist/css/site.css",
+  css: "./dist/css/site.css",
 
-    map: true,
-    after : [
-        require("postcss-import")
-    ]
+  map: true,
+  after: [
+    require("postcss-import")
+  ]
 });
 
 build.bundle(function(err, output) {
   var write = fs.writeFileSync;
 
-  if(err) console.log(err);
+  if (err) { 
+    console.log(err);
+    return;
+  }
+
   write('./dist/bundle.js', output);
+  console.log('Bundle built!');
 });
