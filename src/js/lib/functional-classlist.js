@@ -1,39 +1,57 @@
 /*
-    classList implementation wrapper for ie8 Compat. 
+    classList implementation wrapper for ie8 Compat.
 */
-module.exports = function __classList(element) {
-    var classes = element.className,
-        list    = classes.replace(/ +/g, " ").split(" ");
+module.exports = function classList(element) {
+  var classes = element.className,
+      list    = classes.replace(/ +/g, " ").split(" ");
 
-    function _add(classes) {
-        var individuals = classes.split(" ");
+  function _exists(cls) {
+    return list.indexOf(cls) > -1;
+  }
 
-        list = list.concat(individuals);
-        _set(list);
+  // Add classes to an element
+  // Naive: assumes no duplicates
+  function _add(classes) {
+    var i,
+        individuals = classes.split(" "),
+        size        = individuals.length;
+
+    for(i = 0; i < size; i++) {
+      var cls = individuals[i];
+
+      // If the class already exists, remove it from the
+      // array we're eventually appending to the class list.
+      (_exists(cls)) ? individuals.splice(i, 1) : function(){}();
     }
 
-    function _remove(classes) {
-        var i,
-            individuals = classes.split(" "),
-            size        = individuals.length;
+    list = list.concat(individuals);
+    _set(list);
+  }
 
-        for(i = 0; i < size; i++) {
-            var at = list.indexOf(individuals[i]);
+  // Remove classes from an element
+  // Naive: assumes no duplicates
+  function _remove(classes) {
+    var i,
+        individuals = classes.split(" "),
+        size        = individuals.length;
 
-            if(at !== -1) {
-                list.splice(at, 1);
-            }
+    for(i = 0; i < size; i++) {
+        var at = list.indexOf(individuals[i]);
+
+        if(at !== -1) {
+            list.splice(at, 1);
         }
-        
-        _set(list);
     }
 
-    function _set(classes) {
-        return element.className = classes.join(" "); 
-    }
+    _set(list);
+  }
 
-    return {
-        add: _add,
-        remove: _remove,
-    }
+  function _set(classes) {
+    return element.className = classes.join(" ").trim();
+  }
+
+  return {
+    add: _add,
+    remove: _remove,
+  }
 }
