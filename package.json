@@ -1,7 +1,7 @@
 {
-  "name": "stackpack",
-  "version": "1.0.0",
-  "description": "A project scaffolding tool using Browserify and Modular-css",
+  "name": "functional-dom-query",
+  "version": "0.0.1",
+  "description": "A lighter, jQuery like tool that makes use of stateless functions to query the DOM",
   "main": "index.js",
   "scripts": {
     "build": "npm run lint && node build-bundle.js",
@@ -13,21 +13,16 @@
     "url": "https://github.com/morklympious/stackpack.git"
   },
   "keywords": [
-    "boilerplate",
-    "browserify",
-    "development"
+    "DOM",
+    "jQuery",
+    "alternative"
   ],
   "author": "Bradley Stafford",
   "license": "MIT",
   "devDependencies": {
     "browserify": "^13.0.0",
-    "ecstatic": "^1.4.0",
     "eslint": "^2.9.0",
-    "express": "^4.13.4",
     "minifyify": "^7.3.2",
-    "mithril": "^0.2.2-rc.1",
-    "modular-css": "^0.21.0",
-    "postcss-import": "^8.0.2",
     "shelljs": "^0.7.0",
     "watchify": "^3.7.0"
   }

@@ -1,57 +1,146 @@
-var m = require('mithril');
+var polyfills = require("./js/polyfills/polyfills");
+var classList = require("./js/lib/functional-classlist");
 
-
-/*
-   This CSS is now scoped to the things in this module via file-hash
-   and accessible via css.your_class_name;
-
-   This will output to site.css in dist/css as a bunch of classes with
-   unique prefixes (jkfjei32jlsd_example) (so they target whichever element you want perfectly)
- */
-var css = require('./css/example.css');
+// Polyfill indexOf if need be.
+polyfills.initialize.indexOf();
 
 /*
-  We require global CSS here without assigning because
-  it allows browserify to run the 'modular-css' plugin.
-  That plugin, while running, outputs a file that we link to through our site
-
-  This will output to site.css in dist/css as is
-  (no unique prefixes since it's required but unused)
-  modular-css sees this and it just gets placed into site.css untouched.
-*/
-require('./css/global.css');
-
-/*
-  Explanation of stackpack that appears in browser.
-  Note that this explanation is being rendered in a v-dom library
-  known as 'Mithril', If you're using another vdom library, they
-  should have similar paradigms for you to assign classes to a
-  virtual dom element.
-
-  You're free to do dot or bracket! No biggie! Just make sure You
-  have ESLINT agree with you about it.
-
+    Implementing common jQuery operations in a functional style. 
+    IE8 compatibility minimum. 
 */
 
-m.mount(global.document.getElementById('mount'), {
-  view: function() {
-    return m('div', {class: css.container}, [
-      m('h1', {class: css.heading}, 'Welcome to Stackpack'),
-      m('p', {class: css.paragraph}, [
-        'This is Stackpack! ',
-        'Its a boilerplate to use CSS classes in js via file hash. ',
-        'by requiring CSS in a module, ',
-        'the classes of that CSS file are scoped to that module. ',
-        'No more CSS collisions. If there are any, its definitely your fault '
-      ]),
-      m('p', {class: css.paragraph}, [
-        'This is probably most useful to you if you wanteverything in js ',
-        'including using your css classes for things created in a Virtual Dom. '
-      ]),
-      m('p', {class: css.paragraph}, [
-        'Using Mithril. Or React. or Vdom. Or. uh. Whatever. '
-      ]),
-      require('./js/explanation') // Works just fine via require, too!
-    ]);
-  }
-});
+/*
+    Return an array of Nodes
+    Feature set - ES3 (ie8)
+    NOTE: ie8 will return elements only from this. 
+    All other browsers will return whitespace/text 
+    in addition. 
+*/
+function __nodes(collection) {
+    var i,
+        size  = collection.length,
+        nodes = Array(size);
+
+    for(i = 0; i < size; i++) {
+        nodes[i] = collection[i]
+    }
+
+    return nodes; 
+}
+
+/*  
+    Return an array of Elements
+    Feature set - ES3 (ie8)
+    NOTE: ie8 will return elements only from this. 
+    All other browsers will return whitespace/text 
+    in addition. 
+*/
+function __elements(collection) {
+    var i,
+        nodes    = __nodes(collection),
+        size     = nodes.length,
+        elements = [],
+        element  = Node.ELEMENT_NODE;  
+
+
+    for(i = 0; i < size; i++) {
+        var current   = nodes[i],
+            elemental = current.nodeType === element; 
+
+        if(elemental) {
+            elements.push(current);
+        }
+    }
+
+    return elements;
+}
+
+/* 
+=====================================
+    NODE OPERATIONS
+=====================================
+*/
+
+// Find a nested element
+function _find(element, selector){
+    return __elements(element.querySelectorAll(selector));
+}
+
+function _closest(element, selector) {
+
+}
+
+// Get immediate children
+function _children(element) {
+    return __elements(element.childNodes);
+}
+
+// Return node parent
+function _parent(element) {
+    return element.parentNode;
+}
+
+// Append node as last child. 
+function _append(element, node) {
+    return element.appendChild(node);
+}
+
+// Prepend Node as first child
+function _prepend(element, node) {
+    var first = element.firstChild;
+
+    return element.insertBefore(node, child);
+}
+
+/* 
+=====================================
+    ATTRIBUTE OPERATIONS
+=====================================
+*/
+
+// Get/Set Attributes
+// Feature set - ES3 (ie8)
+function _attr(element, attr, value){
+    return value ? element.setAttribute(attr, value) : element.getAttribute(attr);
+}
+
+// Remove an attribute
+// Feature set - ES3 (ie8)
+function _removeAttr(element, attr) {
+    return element.removeAttribute(attr);
+}
+
+// Get/Set Values
+// Feature set - ES3 (ie8)
+function _value(element, value) {
+    return value ? element.value = value : element.value;
+}
+
+// Add a class
+// Feature set - ES3 (ie8)
+function _addClass(element, classes) {
+    var list = classList(element);
+
+    list.add(classes);
+}
+
+// Remove a class
+// Feature set - ES3 (ie8)
+function _removeClass(element, classes) {
+    var list = classList(element);
+
+    list.remove(classes);
+}
+
+module.exports = {
+    find: _find,
+    children: _children,
+    parent: _parent,
+    attr: _attr,
+    removeAttr: _removeAttr,
+    value: _value,
+    class: {
+        add: _addClass,
+        remove: _removeClass
+    }
+}
