@@ -1,13 +1,27 @@
 var polyfills = require("../polyfills/polyfills");
 var classList = require("./functional-classlist");
 
-// Polyfill indexOf if need be.
+// Polyfill indexOf if need be. (ie8 depends on this)
 polyfills.initialize.indexOf();
+
+// Polyfill Element.matches (ie8 depends on this)
+polyfills.initialize.matches();
 
 /*
     Implementing common jQuery operations in a functional style. 
     IE8 compatibility minimum. 
 */
+
+function __each(collection, callback) {
+  var i,
+      size = collection.length;
+
+  for(i = 0; i < size; i++) {
+    callback(collection[i], i, collection);
+  }
+
+  return;
+}
 
 /*
     Return an array of Nodes
@@ -21,9 +35,9 @@ function __nodes(collection) {
       size  = collection.length,
       nodes = Array(size);
 
-  for(i = 0; i < size; i++) {
-      nodes[i] = collection[i]
-  }
+  __each(collection, function(node) {
+    nodes.push(node);
+  })
 
   return nodes; 
 }
@@ -31,8 +45,8 @@ function __nodes(collection) {
 /*  
     Return an array of Elements
     Feature set - ES3 (ie8)
-    NOTE: ie8 will return elements only from this. 
-    All other browsers will return whitespace/text 
+    NOTE: ie8 will return only elements from this. 
+    All other browsers will return whitespace/text nodes
     in addition. 
 */
 function __elements(collection) {
@@ -40,17 +54,14 @@ function __elements(collection) {
       nodes    = __nodes(collection),
       size     = nodes.length,
       elements = [],
-      element  = Node.ELEMENT_NODE;  
+      ELEMENT  = Node.ELEMENT_NODE;  
 
-
-  for(i = 0; i < size; i++) {
-    var current   = nodes[i],
-        elemental = current.nodeType === element; 
-
-    if(elemental) {
-        elements.push(current);
+  __each(collection, function(element) {
+    if(element.nodeType === ELEMENT) {
+      elements.push(element);
     }
-  }
+  });
+
 
   return elements;
 }
@@ -66,8 +77,16 @@ function _find(element, selector){
   return __elements(element.querySelectorAll(selector));
 }
 
+// find the closest element that matches (includes self)
 function _closest(element, selector) {
+  var matched = false,
+      current = element; 
 
+  while(!current.matches(selector)) {
+    current = _parent(current);
+  }
+
+  return !(current === document) ? current : false;
 }
 
 // Get immediate children
@@ -139,8 +158,6 @@ module.exports = {
   attr: _attr,
   removeAttr: _removeAttr,
   value: _value,
-  class: {
-    add: _addClass,
-    remove: _removeClass
-  }
+  addcls: _addClass,
+  removecls: _removeClass
 }
