@@ -19,8 +19,6 @@ function __each(collection, callback) {
   for(i = 0; i < size; i++) {
     callback(collection[i], i, collection);
   }
-
-  return;
 }
 
 /*
@@ -61,7 +59,6 @@ function __elements(collection) {
       elements.push(element);
     }
   });
-
 
   return elements;
 }
@@ -106,9 +103,7 @@ function _append(element, node) {
 
 // Prepend Node as first child
 function _prepend(element, node) {
-  var first = element.firstChild;
-
-  return element.insertBefore(node, child);
+  return element.insertBefore(node, element.firstChild);
 }
 
 /* 
@@ -120,7 +115,8 @@ function _prepend(element, node) {
 // Get/Set Attributes
 // Feature set - ES3 (ie8)
 function _attr(element, attr, value){
-  return value ? element.setAttribute(attr, value) : element.getAttribute(attr);
+  return value ? element.setAttribute(attr, value) : 
+                 element.getAttribute(attr);
 }
 
 // Remove an attribute
@@ -138,17 +134,13 @@ function _value(element, value) {
 // Add a class
 // Feature set - ES3 (ie8)
 function _addClass(element, classes) {
-  var list = classList(element);
-
-  list.add(classes);
+  classList(element).add(classes);
 }
 
 // Remove a class
 // Feature set - ES3 (ie8)
 function _removeClass(element, classes) {
-  var list = classList(element);
-
-  list.remove(classes);
+  classList(element).remove(classes);
 }
 
 module.exports = {
