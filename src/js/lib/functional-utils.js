@@ -8,7 +8,7 @@ function _each(collection, callback) {
       size = collection.length;
 
   for(i = 0; i < size; i++) {
-    callback(collection[i], i, collection);
+    return callback(collection[i], i, collection);
   }
 }
 
@@ -20,13 +20,11 @@ function _each(collection, callback) {
     in addition. 
 */
 function _nodes(collection) {
-  var i,
-      size  = collection.length,
-      nodes = Array(size);
+  var nodes = Array(collection.size);
 
-  __each(collection, function(node) {
+  _each(collection, function(node) {
     nodes.push(node);
-  })
+  });
 
   return nodes; 
 }
@@ -39,15 +37,13 @@ function _nodes(collection) {
     in addition. 
 */
 function _elements(collection) {
-  var i,
-      nodes    = __nodes(collection),
-      size     = nodes.length,
+  var nodes    = _nodes(collection),
       elements = [],
       ELEMENT  = Node.ELEMENT_NODE;  
 
-  __each(collection, function(element) {
-    if(element.nodeType === ELEMENT) {
-      elements.push(element);
+  _each(nodes, function(node) {
+    if(node.nodeType === ELEMENT) {
+      elements.push(node);
     }
   });
 
@@ -55,7 +51,7 @@ function _elements(collection) {
 }
 
 module.exports = {
-  each: __each,
-  nodes: __nodes,
-  elements: __elements
-}
+  each     : _each,
+  nodes    : _nodes,
+  elements : _elements
+};

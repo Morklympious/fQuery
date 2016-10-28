@@ -1,3 +1,5 @@
+var _each = require("./functional-utils").each;
+
 /*
     classList element wrapper for ie8 Compat.
 */
@@ -9,19 +11,18 @@ module.exports = function classList(element) {
     return list.indexOf(cls) > -1;
   }
 
+  function _set(classes) {
+    return element.className = classes.join(" ").trim();
+  }
+
   // Add classes to an element
   function _add(classes) {
     var i,
-        individuals = classes.split(" "),
-        size        = individuals.length;
-
-    for(i = 0; i < size; i++) {
-      var cls = individuals[i];
-
-      // If the class already exists on the element, remove it from the
-      // array we're eventually appending to the class list.
-      (_exists(cls)) ? individuals.splice(i, 1) : function(){}();
-    }
+        individuals = classes.split(" ");
+    
+    _each(individuals, function(cls, index) {
+      (_exists(cls)) ? individuals.splice(index, 1) : (function() {}());
+    });
 
     list = list.concat(individuals);
     _set(list);
@@ -30,27 +31,21 @@ module.exports = function classList(element) {
   // Remove classes from an element
   // Naive: assumes no duplicates
   function _remove(classes) {
-    var i,
-        individuals = classes.split(" "),
-        size        = individuals.length;
+    var individuals = classes.split(" ");
 
-    for(i = 0; i < size; i++) {
-        var at = list.indexOf(individuals[i]);
-
-        if(at !== -1) {
-            list.splice(at, 1);
-        }
-    }
-
+    _each(individuals, function(cls, index) {
+      var at = list.indexOf(cls);
+      
+      if(at !== -1) {
+        list.splice(at, 1);
+      }
+    });
+   
     _set(list);
   }
 
-  function _set(classes) {
-    return element.className = classes.join(" ").trim();
-  }
-
   return {
-    add: _add,
-    remove: _remove,
-  }
-}
+    add    : _add,
+    remove : _remove
+  };
+};

@@ -1,7 +1,11 @@
 module.exports = {
-  "extends": "",
+  "extends": "arenanet",
   "rules": {
 
+  },
+  "env": {
+    "browser": true,
+    "node": true
   },
   "root": true
 

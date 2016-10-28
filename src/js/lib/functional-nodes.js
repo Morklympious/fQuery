@@ -1,4 +1,4 @@
-var classList = require("functional-classlist");
+var classList = require("./functional-classlist");
 
 /* 
 =====================================
@@ -8,7 +8,7 @@ var classList = require("functional-classlist");
 
 // Get/Set Attributes
 // Feature set - ES3 (ie8)
-function _attr(element, attr, value){
+function _attr(element, attr, value) {
   return value ? element.setAttribute(attr, value) : 
                  element.getAttribute(attr);
 }
@@ -48,11 +48,11 @@ function _prepend(element, node) {
 }
 
 module.exports = {
-  attr: _attr,
-  removeAttr: _removeAttr,
-  value: _value,
-  addClass: addClass,
-  removeClass: removeClass,
-  append: _append,
-  prepend: _prepend
-}
+  attr        : _attr,
+  removeAttr  : _removeAttr,
+  value       : _value,
+  addClass    : _addClass,
+  removeClass : _removeClass,
+  append      : _append,
+  prepend     : _prepend
+};

@@ -1,4 +1,4 @@
-var _elements = require("./functional-helpers").elements;
+var _elements = require("./functional-utils").elements;
 
 /* 
 =====================================
@@ -7,7 +7,7 @@ var _elements = require("./functional-helpers").elements;
 */
 
 // Find a nested element
-function _find(element, selector){
+function _find(element, selector) {
   return _elements(element.querySelectorAll(selector));
 }
 
@@ -39,12 +39,10 @@ function _siblings(element, selector) {
   return selector ? _find(_parent(element), selector) : _children(_parent(element));
 }
 
-// Append node as last child. 
-function _append(element, node) {
-  return element.appendChild(node);
-}
-
-// Prepend Node as first child
-function _prepend(element, node) {
-  return element.insertBefore(node, element.firstChild);
-}
+module.exports = {
+  find     : _find,
+  closest  : _closest,
+  parent   : _parent,
+  children : _children,
+  siblings : _siblings
+};
