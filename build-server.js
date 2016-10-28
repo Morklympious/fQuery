@@ -11,16 +11,9 @@ var server = express(),
     });
 
 /* Create directories for output */
-shell.mkdir('-p', 'dist/css');
-
+shell.mkdir('-p', 'dist');
 
 builder.plugin('watchify');
-builder.plugin("modular-css/browserify", {
-  css: "dist/css/site.css",
-  after: [
-    require("postcss-import")
-  ]
-});
 
 builder.on('update', bundle);
 bundle();

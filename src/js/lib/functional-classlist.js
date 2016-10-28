@@ -1,5 +1,5 @@
 /*
-    classList implementation wrapper for ie8 Compat.
+    classList element wrapper for ie8 Compat.
 */
 module.exports = function classList(element) {
   var classes = element.className,
@@ -10,7 +10,6 @@ module.exports = function classList(element) {
   }
 
   // Add classes to an element
-  // Naive: assumes no duplicates
   function _add(classes) {
     var i,
         individuals = classes.split(" "),
@@ -19,7 +18,7 @@ module.exports = function classList(element) {
     for(i = 0; i < size; i++) {
       var cls = individuals[i];
 
-      // If the class already exists, remove it from the
+      // If the class already exists on the element, remove it from the
       // array we're eventually appending to the class list.
       (_exists(cls)) ? individuals.splice(i, 1) : function(){}();
     }

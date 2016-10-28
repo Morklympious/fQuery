@@ -2,7 +2,7 @@
     indexOf Polyfill for ie8. 
 */
 function _indexOf() {
-  if (!Array.prototype.indexOf) {
+  if (!global.Array.prototype.indexOf) {
     Array.prototype.indexOf = function(elt /*, from*/) {
       var len = this.length >>> 0;
 
@@ -24,7 +24,7 @@ function _indexOf() {
 }
 
 function _matches() {
-  if (!Element.prototype.matches) {
+  if (!global.Element.prototype.matches) {
     Element.prototype.matches = 
         Element.prototype.matchesSelector || 
         Element.prototype.mozMatchesSelector ||
