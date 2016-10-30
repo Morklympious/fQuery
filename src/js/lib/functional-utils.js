@@ -3,12 +3,12 @@
     IE8 compatibility minimum. 
 */
 
-function _each(collection, callback) {
+function _each(collection, fn) {
   var i,
       size = collection.length;
 
   for(i = 0; i < size; i++) {
-    return callback(collection[i], i, collection);
+    fn(collection[i], i, collection);
   }
 
   return undefined; 
@@ -22,7 +22,7 @@ function _each(collection, callback) {
     in addition. 
 */
 function _nodes(collection) {
-  var nodes = Array(collection.size);
+  var nodes = [];
 
   _each(collection, function(node) {
     nodes.push(node);
@@ -56,9 +56,24 @@ function _exists(value) {
   return {}.toString.call(value) === "[Object Undefined]";
 }
 
+// generates usable DOM Markup. 
+function _markup(html) {
+  var fragment  = document.createDocumentFragment(), 
+      container = document.createElement("div"); 
+
+  container.innerHTML = html;
+
+  _each(_elements(container.childNodes), function(element) {
+    fragment.appendChild(element);
+  });
+
+  return fragment;
+}
+
 module.exports = {
   each     : _each,
   nodes    : _nodes,
   elements : _elements,
-  exists   : _exists
+  exists   : _exists,
+  markup   : _markup
 };
