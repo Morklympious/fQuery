@@ -6,24 +6,6 @@ var _elements = require("./functional-utils").elements;
 =====================================
 */
 
-// Find a nested element
-function _find(element, selector) {
-  return _elements(element.querySelectorAll(selector));
-}
-
-// find the closest element that matches (includes self)
-function _closest(element, selector) {
-  var matched = false,
-      current = element; 
-
-  // If the node has a .matches function, we're still in 
-  // the DOM. If not, we reached the document object. 
-  while(current.matches && !current.matches(selector)) {
-    current = _parent(current);
-  }
-
-  return !(current === document) ? current : false;
-}
 
 // Return node parent
 function _parent(element) {
@@ -37,6 +19,24 @@ function _children(element) {
 
 function _siblings(element, selector) {
   return selector ? _find(_parent(element), selector) : _children(_parent(element));
+}
+
+// Find a nested element
+function _find(element, selector) {
+  return _elements(element.querySelectorAll(selector));
+}
+
+// find the closest element that matches (includes self)
+function _closest(element, selector) {
+  var current = element; 
+
+  // If the node has a .matches function, we're still in 
+  // the DOM. If not, we reached the document object. 
+  while(current.matches && !current.matches(selector)) {
+    current = _parent(current);
+  }
+
+  return !(current === document) ? current : false;
 }
 
 module.exports = {

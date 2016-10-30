@@ -4,16 +4,36 @@ var mocha    = require("mocha"),
     document = (new Browser()).getDocument(),
     _f       = require("../src/entry.js");
 
-describe("attr(element, attr, value)", function() {
-  var root = document.createElement("div");
+describe("Node operations", () => {
+ 
+  describe("attr(element, attr, value)", () => {
+     
 
-  it("should set attributes", function() {
-    _f.node.attr(root, "data-cool", true);
+    it("should set attributes", () => {
+      var root = document.createElement("div");
 
-    expect(root.getAttribute("data-cool")).to.equal("true");
+      _f.node.attr(root, "data-cool", true);
+      expect(root.getAttribute("data-cool")).to.equal("true");
+    });
+
+    it("should get attributes", () => {
+      var root = document.createElement("div");
+      console.log(root);
+      root.setAttribute("id", "bars");
+      expect(_f.node.attr(root, "id")).to.equal("false");
+    });
   });
 
-  it("should get attributes", function() {
+  describe("removeAttr(element, attr)", () => {
 
-  })
-})
+
+
+    it("can remove an id", () => {
+
+    });
+
+    it("can remove a class", () => {
+      
+    });
+  });
+});

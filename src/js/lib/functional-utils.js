@@ -10,6 +10,8 @@ function _each(collection, callback) {
   for(i = 0; i < size; i++) {
     return callback(collection[i], i, collection);
   }
+
+  return undefined; 
 }
 
 /*
@@ -50,8 +52,13 @@ function _elements(collection) {
   return elements;
 }
 
+function _exists(value) {
+  return {}.toString.call(value) === "[Object Undefined]";
+}
+
 module.exports = {
   each     : _each,
   nodes    : _nodes,
-  elements : _elements
+  elements : _elements,
+  exists   : _exists
 };

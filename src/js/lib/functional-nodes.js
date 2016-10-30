@@ -9,8 +9,10 @@ var classList = require("./functional-classlist");
 // Get/Set Attributes
 // Feature set - ES3 (ie8)
 function _attr(element, attr, value) {
-  return value ? element.setAttribute(attr, value) : 
-                 element.getAttribute(attr);
+  var setting = {}.toString.call(value) !== "[Object Undefined]";
+
+  return setting ? element.setAttribute(attr, value) : 
+                   element.getAttribute(attr);
 }
 
 // Remove an attribute
@@ -22,7 +24,7 @@ function _removeAttr(element, attr) {
 // Get/Set Values
 // Feature set - ES3 (ie8)
 function _value(element, value) {
-  return value ? element.value = value : element.value;
+  element.value = (value || element.value);
 }
 
 // Add a class
