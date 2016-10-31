@@ -3,7 +3,7 @@ var _each = require("./functional-utils").each;
 /*
     classList element wrapper for ie8 Compat.
 */
-function classList(element) {
+function classlist(element) {
   var classes  = element.className,
       list    = classes.replace(/ +/g, " ").split(" ");
 
@@ -14,7 +14,7 @@ function classList(element) {
   function _set(cls) {
     element.className = cls.join(" ").trim();
 
-    return;
+    return element; 
   }
 
   // Add classes to an element
@@ -26,7 +26,8 @@ function classList(element) {
     });
 
     list = list.concat(individuals);
-    _set(list);
+
+    return _set(list);
   }
 
   // Remove classes from an element
@@ -42,7 +43,7 @@ function classList(element) {
       }
     });
    
-    _set(list);
+    return _set(list);
   }
 
   return {
@@ -51,4 +52,4 @@ function classList(element) {
   };
 }
 
-module.exports = classList; 
+module.exports = classlist; 

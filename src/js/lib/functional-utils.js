@@ -52,28 +52,8 @@ function _elements(collection) {
   return elements;
 }
 
-function _exists(value) {
-  return {}.toString.call(value) === "[Object Undefined]";
-}
-
-// generates usable DOM Markup. 
-function _markup(html) {
-  var fragment  = document.createDocumentFragment(), 
-      container = document.createElement("div"); 
-
-  container.innerHTML = html;
-
-  _each(_elements(container.childNodes), function(element) {
-    fragment.appendChild(element);
-  });
-
-  return fragment;
-}
-
 module.exports = {
   each     : _each,
   nodes    : _nodes,
-  elements : _elements,
-  exists   : _exists,
-  markup   : _markup
+  elements : _elements
 };

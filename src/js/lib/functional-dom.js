@@ -1,12 +1,5 @@
 var _elements = require("./functional-utils").elements;
 
-/* 
-=====================================
-    NODE TRAVERSAL
-=====================================
-*/
-
-
 // Return node parent
 function _parent(element) {
   return element.parentNode;
@@ -26,6 +19,10 @@ function _find(element, selector) {
   return _elements(element.querySelectorAll(selector));
 }
 
+function _query(selector) {
+  return _find(document.body, selector);
+}
+
 // find the closest element that matches (includes self)
 function _closest(element, selector) {
   var current = element; 
@@ -40,6 +37,7 @@ function _closest(element, selector) {
 }
 
 module.exports = {
+  query    : _query, 
   find     : _find,
   closest  : _closest,
   parent   : _parent,
