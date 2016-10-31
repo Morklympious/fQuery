@@ -9,7 +9,7 @@ var classList = require("./functional-classlist");
 // Get/Set Attributes
 // Feature set - ES3 (ie8)
 function _attr(element, attr, value) {
-  var setting = {}.toString.call(value) !== "[Object Undefined]";
+  var setting = Object.prototype.toString.call(value) !== "[object Undefined]";
 
   return setting ? element.setAttribute(attr, value) : 
                    element.getAttribute(attr);

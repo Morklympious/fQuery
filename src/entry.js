@@ -1,5 +1,5 @@
-var node      = require("./js/lib/functional-nodes"),
-    dom  = require("./js/lib/functional-traverse"),
+var node      = require("./js/lib/functional-node"),
+    dom  = require("./js/lib/functional-dom"),
     markup    = require("./js/lib/functional-markup");
 
 
