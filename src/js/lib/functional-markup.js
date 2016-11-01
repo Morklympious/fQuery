@@ -16,16 +16,21 @@ function _create(html) {
   return fragment;
 }
 
+function _empty(element) {
+  element.innerHTML = "";
+}
+
 function _html(element, html) {
   if(html) {
+    _empty(element);
     element.appendChild(_create(html));
   }
 
   return element.innerHtml; 
 }
 
-
 module.exports = {
   create : _create,
+  empty  : _empty,
   html   : _html
 };

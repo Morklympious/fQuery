@@ -17,6 +17,12 @@ function classlist(element) {
     return element; 
   }
 
+  function _contains(cls) {
+    var at = list.indexOf(cls);
+    
+    return (at !== -1); 
+  }
+
   // Add classes to an element
   function _add(cls) {
     var individuals = cls.split(" ");
@@ -36,9 +42,11 @@ function classlist(element) {
     var individuals = cls.split(" ");
 
     _each(individuals, function(classname) {
-      var at = list.indexOf(classname);
+      var at; 
+
+      if(_contains(classname)) {
+        at = list.indexOf(classname);
       
-      if(at !== -1) {
         list.splice(at, 1);
       }
     });
