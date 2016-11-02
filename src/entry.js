@@ -1,6 +1,6 @@
-var node      = require("./js/lib/functional-node"),
-    dom  = require("./js/lib/functional-dom"),
-    markup    = require("./js/lib/functional-markup");
+var node   = require("./js/element"),
+    dom    = require("./js/dom"),
+    markup = require("./js/markup");
 
 
 global._f = module.exports = {

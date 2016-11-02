@@ -1,6 +1,10 @@
-var utils     = require("./functional-utils"),
-    _each     = utils.each,
-    _elements = utils.elements;
+var helpers   = require("./internal/helpers"),
+    _each     = helpers.each,
+    _elements = helpers.elements,
+
+    elem      = require("./element"),
+    append    = elem.append,
+    empty     = elem.empty;
 
 // generates usable DOM Markup. 
 function _create(html) {
@@ -10,20 +14,16 @@ function _create(html) {
   container.innerHTML = html;
 
   _each(_elements(container.childNodes), function(element) {
-    fragment.appendChild(element);
+    append(fragment, element);
   });
 
   return fragment;
 }
 
-function _empty(element) {
-  element.innerHTML = "";
-}
-
 function _html(element, html) {
   if(html) {
-    _empty(element);
-    element.appendChild(_create(html));
+    empty(element);
+    append(element, _create(html));
   }
 
   return element.innerHtml; 
@@ -31,6 +31,5 @@ function _html(element, html) {
 
 module.exports = {
   create : _create,
-  empty  : _empty,
   html   : _html
 };
