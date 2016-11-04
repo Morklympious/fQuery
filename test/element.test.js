@@ -7,22 +7,29 @@ var mocha    = require("mocha"),
 describe("Node operations", () => {
  
   describe("attr(element, attr, value)", () => {
-     var root = document.createElement("div");
+    var attr = _f.element.attr,
+        root = document.createElement("div");
+
+    root.setAttribute("id", "Alexander");
+    root.setAttribute("class", "Hamilton");
+    root.setAttribute("custom-attr", "100");
 
     it("should set attributes", () => {
-      _f.node.attr(root, "data-cool", true);
-      expect(root.getAttribute("data-cool")).to.equal("true");
+      attr(root, "class", "Burr");
+
+      expect(root.getAttribute("id")).to.equal("Alexander");
+      expect(root.getAttribute("class")).to.equal("Burr");
     });
 
     it("should get attributes", () => { 
       root.setAttribute("id", "cool");
-      expect(_f.node.attr(root, "id")).to.equal("cool");
+      expect(attr(root, "id")).to.equal("cool");
     });
 
   });
 
   describe("removeAttr(element, attr)", () => {
-    var remove = _f.node.removeAttr,
+    var remove = _f.element.removeAttr,
         root   = document.createElement("div")
 
     root.setAttribute("id", "Alexander");
@@ -40,8 +47,25 @@ describe("Node operations", () => {
     });
 
     it("can remove custom attributes", () => {
-      remove(root, "custom-attr")
+      remove(root, "custom-attr");
       expect(root.getAttribute("custom-attr")).to.equal(null);
+    });
+  });
+
+  describe("value(element, val)", () => {
+    var value = _f.element.value,
+        root  = document.createElement("input");
+
+    it("can correctly retrieve a value", () => {
+      
+    });
+
+    it("can reassign a value", () => {
+      
+    });
+
+    it("returns nothing for non-control elements", () => {
+     
     });
   });
 });

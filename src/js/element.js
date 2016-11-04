@@ -11,8 +11,8 @@ var classList = require("./classlist");
 function attr(element, attribute, val) {
   var setting = Object.prototype.toString.call(val) !== "[object Undefined]";
 
-  return setting ? element.setAttribute(attr, val) : 
-                   element.getAttribute(attr);
+  return setting ? element.setAttribute(attribute, val) : 
+                   element.getAttribute(attribute);
 }
 
 // Remove an attribute
