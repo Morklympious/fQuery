@@ -25,6 +25,8 @@ function removeAttr(element, attribute) {
 // Feature set - ES3 (ie8)
 function value(element, val) {
   element.value = (val || element.value);
+
+  return element.value; 
 }
 
 // Add a class

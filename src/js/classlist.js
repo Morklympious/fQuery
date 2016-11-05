@@ -1,4 +1,6 @@
-var _each = require("./internal/helpers").each;
+var helpers  = require("./internal/helpers"),
+    _each    = helpers.each,
+    _uniques = helpers.uniques;
 
 /*
     classList element wrapper for ie8 Compat.
@@ -19,15 +21,10 @@ function classlist(element) {
 
   // Add classes to an element
   function _add(cls) {
+    // Passed in classes split into an array
     var individuals = cls.split(" ");
-    
-    _each(individuals, function(classname, index) {
-      (_has(classname)) ? individuals.splice(index, 1) : null;
-    });
 
-    list = list.concat(individuals);
-
-    return _set(list);
+    return _set(_uniques(list.concat(individuals)));
   }
 
   // Remove classes from an element
@@ -38,14 +35,12 @@ function classlist(element) {
     _each(individuals, function(classname) {
       var at; 
 
-      while(_has(classname)) {
+     if(_has(classname)) {
         at = list.indexOf(classname);
-      
+
         list.splice(at, 1);
       }
     });
-   
-    return _set(list);
   }
 
   return {

@@ -56,16 +56,44 @@ describe("Node operations", () => {
     var value = _f.element.value,
         root  = document.createElement("input");
 
+    root.value = "test";
+
     it("can correctly retrieve a value", () => {
-      
+      expect(value(root)).to.equal("test");
     });
 
     it("can reassign a value", () => {
-      
+      value(root, "doot");
+      expect(root.value).to.equal("doot");
+      expect(value(root)).to.equal("doot");
+    });
+  });
+
+  describe("addClass(element, classes)", () => {
+    var addClass = _f.element.addClass,
+        root     = document.createElement("div");
+    
+    beforeEach(function() {
+      root.className = "one two three four";
+    });  
+
+    it("can correctly add a class", () => {
+      addClass(root, "five");
+      expect(root.className.indexOf("five")).to.be.above(-1);
+      expect(root.className).to.equal("one two three four five");
     });
 
-    it("returns nothing for non-control elements", () => {
-     
+    it("can correctly add multiple classes", () => {
+      addClass(root, "five six seven");
+      expect(root.className).to.equal("one two three four five six seven");
     });
+
+    it("can correctly add a class when there are duplicates", function() {
+      addClass(root, "one five five five five five");
+      expect(root.className.indexOf("five")).to.be.above(-1);
+      expect(root.className).to.equal("one two three four five");
+    });
+
+    
   });
 });

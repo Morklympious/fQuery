@@ -1,17 +1,30 @@
 /*
-    Implementing common jQuery operations in a functional style. 
-    IE8 compatibility minimum. 
+    Implementing common operations in a functional style -- ie8 compat. 
 */
 
 function _each(collection, fn) {
   var i,
       size = collection.length;
 
-  for(i = 0; i < size; i++) {
+  for(i = size; i > 0; i--) {
     fn(collection[i], i, collection);
   }
 
   return undefined; 
+}
+
+function _uniques(collection, fn) {
+  var at;
+
+  _each(collection, function(item, index, items) {
+    at = items.indexOf(item);
+
+    if(at !== index) {
+      collection.splice(index, 1);
+    }
+  });
+
+  return collection; 
 }
 
 /*
@@ -54,6 +67,7 @@ function _elements(collection) {
 
 module.exports = {
   each     : _each,
+  uniques  : _uniques,
   nodes    : _nodes,
   elements : _elements
 };
