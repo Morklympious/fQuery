@@ -4,6 +4,7 @@ var mocha    = require("mocha"),
     document = (new Browser()).getDocument(),
     _f       = require("../src/entry.js");
 
+
 describe("Node operations", () => {
  
   describe("attr(element, attr, value)", () => {
@@ -88,13 +89,13 @@ describe("Node operations", () => {
       expect(root.className).to.equal("one two three four five six seven");
     });
 
-    it("can correctly add a class when there are duplicates", () => {
+    it("handles duplicates", () => {
       addClass(root, "five five five five five");
       expect(root.className.indexOf("five")).to.be.above(-1);
       expect(root.className).to.equal("one two three four five");
     });
 
-    it("can correctly add a class with duplicates and existing classes", () => {
+    it("handles duplicates of existing classes", () => {
       addClass(root, "one one two three four four four five six six");
       expect(root.className).to.equal("one two three four five six");
     });
@@ -153,8 +154,73 @@ describe("Node operations", () => {
     });
 
     it("returns the node that was appended", () => {
-      
       expect(append(root, span).tagName).to.equal("SPAN");
     });
   });
+
+  describe("prepend(element, prependee)", () => {
+    var prepend = _f.element.prepend,
+        root,
+        span    = document.createElement("span");
+    
+    beforeEach(() => {
+      root = document.createElement("div");
+    });  
+
+    it("can correctly prepend child node", () => {
+      prepend(root, span);
+      expect(root.firstChild.tagName).to.equal("SPAN");
+    });
+
+    it("can nest prepend calls for prepending", () => {
+      prepend(root, span);
+      prepend(root, document.createElement("textarea"));
+
+      expect(root.firstChild.tagName).to.equal("TEXTAREA");
+    });
+
+    it("returns the node that was prepended", () => {
+      expect(prepend(root, span).tagName).to.equal("SPAN");
+    });
+  });
+
+  describe("empty(element)", () => {
+    var empty = _f.element.empty,
+        root    = document.createElement("div"),
+        span    = document.createElement("span");
+
+    root.appendChild(span);
+
+    it("empties the inner html of an element", () => {
+      expect(root.firstChild.tagName).to.equal("SPAN");
+      expect(empty(root).innerHTML).to.equal("");
+    });
+  });
+
+  describe("clone(element)", () => {
+    var clone    = _f.element.clone,
+        root     = document.createElement("div"),
+        two;
+    
+    root.setAttribute("class", "one two three");
+    root.setAttribute("data-custom", "fire");
+    root.appendChild(document.createElement("input"));
+    root.appendChild(document.createElement("i"));
+
+    two = clone(root, true);
+
+    it("clones a node (attributes and all)", () => {
+      expect(two.tagName).to.equal("DIV");
+      expect(two.getAttribute("class")).to.equal("one two three");
+      expect(two.getAttribute("data-custom")).to.equal("fire");
+    });
+
+     it("clones a node that has children", () => {
+      expect(two.tagName).to.equal("DIV");
+      expect(two.getAttribute("class")).to.equal("one two three");
+      expect(two.firstChild.tagName).to.equal("INPUT");
+      expect(two.childNodes.length).to.equal(2);
+    });
+  });
+
 });

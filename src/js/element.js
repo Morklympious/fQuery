@@ -54,8 +54,14 @@ function prepend(element, prependee) {
 function empty(element) {
   element.innerHTML = ""; 
 
-  return; 
+  return element; 
 }
+
+function clone(element, deep) {
+  return element.cloneNode(deep); 
+}
+
+
 
 module.exports = {
   attr        : attr,
@@ -65,5 +71,6 @@ module.exports = {
   removeClass : removeClass,
   append      : append,
   prepend     : prepend,
-  empty       : empty
+  empty       : empty, 
+  clone       : clone
 };
