@@ -73,7 +73,7 @@ describe("Node operations", () => {
     var addClass = _f.element.addClass,
         root     = document.createElement("div");
     
-    beforeEach(function() {
+    beforeEach(() => {
       root.className = "one two three four";
     });  
 
@@ -88,12 +88,73 @@ describe("Node operations", () => {
       expect(root.className).to.equal("one two three four five six seven");
     });
 
-    it("can correctly add a class when there are duplicates", function() {
-      addClass(root, "one five five five five five");
+    it("can correctly add a class when there are duplicates", () => {
+      addClass(root, "five five five five five");
       expect(root.className.indexOf("five")).to.be.above(-1);
       expect(root.className).to.equal("one two three four five");
     });
 
+    it("can correctly add a class with duplicates and existing classes", () => {
+      addClass(root, "one one two three four four four five six six");
+      expect(root.className).to.equal("one two three four five six");
+    });
     
+  });
+
+  describe("removeClass(element, classes)", () => {
+    var removeClass = _f.element.removeClass,
+        root     = document.createElement("div");
+    
+    beforeEach(() => {
+      root.className = "one two three four";
+    });  
+
+    it("can correctly remove a class", () => {
+      removeClass(root, "five");
+      expect(root.className.indexOf("five")).to.equal(-1);
+      expect(root.className).to.equal("one two three four");
+    });
+
+    it("can correctly remove multiple classes", () => {
+      removeClass(root, "two three four");
+      expect(root.className).to.equal("one");
+    });
+
+    it("can correctly remove a class when there are duplicates", () => {
+      removeClass(root, "four four four four four");
+      expect(root.className.indexOf("five")).to.equal(-1);
+      expect(root.className).to.equal("one two three");
+    });
+
+    it("can correctly remove a class with duplicates and existing classes", () => {
+      removeClass(root, "one one two three four four four five six six");
+      expect(root.className).to.equal("");
+    });
+  });
+
+  describe("append(element, appendee)", () => {
+    var append = _f.element.append,
+        root,
+        span   = document.createElement("span");
+    
+    beforeEach(() => {
+      root = document.createElement("div");
+    });  
+
+    it("can correctly append child node", () => {
+      append(root, span);
+      expect(root.firstChild.tagName).to.equal("SPAN");
+    });
+
+    it("can nest append calls for appending", () => {
+      append(append(root, span), document.createElement("span"));
+      expect(root.firstChild.tagName).to.equal("SPAN");
+      expect(root.firstChild.firstChild.tagName).to.equal("SPAN");
+    });
+
+    it("returns the node that was appended", () => {
+      
+      expect(append(root, span).tagName).to.equal("SPAN");
+    });
   });
 });

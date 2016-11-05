@@ -42,13 +42,13 @@ function removeClass(element, classes) {
 }
 
 // Append node as last child. 
-function append(element, node) {
-  return element.appendChild(node);
+function append(element, appendee) {
+  return element.appendChild(appendee);
 }
 
 // Prepend Node as first child
-function prepend(element, node) {
-  return element.insertBefore(node, element.firstChild);
+function prepend(element, prependee) {
+  return element.insertBefore(prependee, element.firstChild);
 }
 
 function empty(element) {

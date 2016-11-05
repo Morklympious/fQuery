@@ -30,17 +30,19 @@ function classlist(element) {
   // Remove classes from an element
   // Naive: assumes no duplicates
   function _remove(cls) {
-    var individuals = cls.split(" ");
+    var individuals = _uniques(cls.split(" "));
 
     _each(individuals, function(classname) {
       var at; 
-
+      
      if(_has(classname)) {
         at = list.indexOf(classname);
 
         list.splice(at, 1);
       }
     });
+
+    _set(list);
   }
 
   return {
