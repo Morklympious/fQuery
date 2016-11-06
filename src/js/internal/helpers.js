@@ -54,7 +54,7 @@ function _nodes(collection) {
 function _elements(collection) {
   var nodes    = _nodes(collection),
       elements = [],
-      ELEMENT  = Node.ELEMENT_NODE;  
+      ELEMENT  = 1; // Element node ID.   
 
   _each(nodes, function(node) {
     if(node.nodeType === ELEMENT) {
@@ -62,7 +62,7 @@ function _elements(collection) {
     }
   });
 
-  return elements;
+  return (elements.length === 1) ? elements[0] : elements;
 }
 
 module.exports = {

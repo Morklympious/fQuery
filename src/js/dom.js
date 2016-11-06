@@ -6,7 +6,7 @@ function find(element, selector) {
 }
 
 function query(selector) {
-  return find(document.body, selector);
+  return (selector === "body") ? document.body : find(document.body, selector);
 }
 
 // find the closest element that matches (includes self)

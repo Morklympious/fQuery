@@ -1,4 +1,5 @@
-var classList = require("./classlist");
+var classList = require("./classlist"),
+    dom       = require("./dom");
 
 /* 
 =====================================
@@ -61,7 +62,9 @@ function clone(element, deep) {
   return element.cloneNode(deep); 
 }
 
-
+function remove(element) {
+  return dom.parent(element).removeChild(element);
+}
 
 module.exports = {
   attr        : attr,
@@ -72,5 +75,6 @@ module.exports = {
   append      : append,
   prepend     : prepend,
   empty       : empty, 
-  clone       : clone
+  clone       : clone,
+  remove      : remove
 };

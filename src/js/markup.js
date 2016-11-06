@@ -7,7 +7,7 @@ var helpers   = require("./internal/helpers"),
     empty     = elem.empty;
 
 // generates usable DOM Markup. 
-function _create(html) {
+function create(html) {
   var fragment  = document.createDocumentFragment(), 
       container = document.createElement("div"); 
 
@@ -20,16 +20,34 @@ function _create(html) {
   return fragment;
 }
 
-function _html(element, html) {
-  if(html) {
+function html(element, markup) {
+  if(markup) {
     empty(element);
-    append(element, _create(html));
+    append(element, create(markup));
   }
-
+  
   return element.innerHtml; 
 }
 
+function text(element, content) {
+  
+  if(!content) {
+    return element.textContent || element.innerText;
+  }
+
+  if(element.innerText) {
+    element.innerText = content;
+
+    return element.innerText;
+  }
+
+  element.textContent = content; 
+
+  return element.textContent; 
+}
+
 module.exports = {
-  create : _create,
-  html   : _html
+  create : create,
+  html   : html,
+  text   : text
 };
