@@ -1,57 +1,81 @@
 var mocha    = require("mocha"),
     expect   = require("chai").expect,
+    fs       = require("fs"),
     Browser  = require("mock-browser").mocks.MockBrowser,
-    document = (new Browser()).getDocument(),
-    _f       = require("../src/entry.js");
+    window   = new Browser(),
+    document = window.getDocument(),
+
+    _f       = require("../src/entry.js"),
+    mock     = fs.readFileSync("./test/html/structure.html");
 
 
 describe("DOM traversal operations", () => {
 
   describe("find(element, selector)", () => {
     var find = _f.dom.find,
-        root,
-        childOne,
-        childTwo;
+        root; 
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
-      
-      childOne.innerHTML =  "<span id='little-one'>";
-      childOne.innerHTML += "  <p data-content='none'></p>";
-      childOne.innerHTML += "</span>";
+      root = document.createElement("html");
+      root.innerHTML = mock;
     });
 
     it("correctly locates an element by tag name", () => {
-      var target = find(root, "span");
-      console.log(target.childNodes);
-      expect(target.tagName).to.equal("SPAN");
-      expect(target.parentNode.tagName).to.equal("DIV");
-      expect(target.getAttribute("id")).to.equal("little-one");
-      //expect(target.firstChild.tagName).to.equal("P");
+      var target = find(root, "div"),
+          first  = target[0];
+
+      expect(target.length).to.be.above(1);
+      expect(first.parentNode.tagName).to.equal("BODY");
+      expect(first.getAttribute("id")).to.equal("wrapper");
     });
 
     it("correctly locates an element by attribute", () => {
-     
+      var target = find(root, "[data-cool]");
+
+      expect(target.tagName).to.equal("DIV");
+      expect(target.className).to.equal("feature article");
+      expect(target.getAttribute("data-cool")).to.equal("true");
     });
 
-    it("correctly locates an element by pseudoclass");
-    it("correctly finds deeply nested elements");
-    it("returns the element if it's found");
-    it("returns a array of elements if they're found");
+    it("correctly locates an element by pseudoclass", () => {
+      var target = find(root, ":checked");
+
+      expect(target.tagName).to.equal("INPUT");
+      expect(target.getAttribute("type")).to.equal("checkbox");
+      expect(target.getAttribute("checked")).to.exist;
+      expect(target.parentNode.tagName).to.equal("LABEL");
+    });
+
+    it("correctly finds deeply nested elements", () => {
+      var target = find(root, ".article-list-item");
+
+      expect(target.tagName).to.equal("LI");
+      expect(target.parentNode.className).to.equal("article-list");
+    });
+
+    it("returns the element if it's found", () => {
+      var target = find(root, ".article-list-item");
+
+      expect(target).to.be.an("object");
+      expect(target.className).to.equal("article-list-item");
+      expect(target.parentNode.tagName).to.equal("UL");
+    });
+    it("returns a array of elements if they're found", () => {
+      var target = find(root, "div");
+
+      expect(target).to.be.an("array");
+      expect(target.length).to.be.above(1);
+    });
+
     it("returns false if no element is found");
   });
 
   describe("query(selector)", () => {
-    var root,
-        childOne,
-        childTwo;
+    var root;
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
+      root = document.createElement("html");
+      root.innerHTML = mock;
     });
 
     it("correctly locates an element by tag name");
@@ -62,14 +86,11 @@ describe("DOM traversal operations", () => {
   });
 
   describe("closest(element, selector)", () => {
-    var root,
-        childOne,
-        childTwo;
+    var root;
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
+      root = document.createElement("html");
+      root.innerHTML = mock;
     });
 
     it("correctly locates an element by tag name");
@@ -82,14 +103,11 @@ describe("DOM traversal operations", () => {
   });
 
   describe("parent(element)", () => {
-    var root,
-        childOne,
-        childTwo;
+    var root;
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
+      root = document.createElement("html");
+      root.innerHTML = mock;
     });
 
     it("correctly returns the parent element");
@@ -97,29 +115,25 @@ describe("DOM traversal operations", () => {
   });
 
   describe("children(element)", () => {
-    var root,
-        childOne,
-        childTwo;
+    var root;
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
+      root = document.createElement("html");
+      root.innerHTML = mock;
     }); 
 
-    it("returns an array (or an element for one match)");
+    it("returns an array (or an element for one match)", () => {
+
+    });
     it("returns an array of only element nodes");
   });
 
   describe("siblings(element, selector)", () => {
-    var root,
-        childOne,
-        childTwo;
+    var root;
 
     beforeEach(() => {
-      root = document.createElement("div");
-      childOne = root.appendChild(document.createElement("div"));
-      childTwo = root.appendChild(document.createElement("div"));
+      root = document.createElement("html");
+      root.innerHTML = mock;
     }); 
 
     it("correctly returns all siblings of a given element");
