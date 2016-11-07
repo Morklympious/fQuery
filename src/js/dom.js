@@ -1,4 +1,6 @@
-var _elements = require("./internal/helpers").elements;
+var helpers   = require("./internal/helpers"),
+    _elements = helpers.elements,
+    _exclude  = helpers.exclude;
 
 // Find a nested element
 function find(element, selector) {
@@ -13,8 +15,7 @@ function query(selector, context) {
 
 // find the closest element that matches (includes self)
 function closest(element, selector) {
-  var current  = element,
-      document = element.ownerDocument;
+  var current  = element;
 
   // While matches is a function and a match is not found
   while(current.matches && !current.matches(selector) && current.tagName !== "HTML") {
@@ -36,7 +37,8 @@ function children(element) {
 }
 
 function siblings(element, selector) {
-  return selector ? find(parent(element), selector) : children(parent(element));
+  return selector ? _exclude(find(parent(element), selector), element) :
+                    _exclude(children(parent(element)), element);
 }
 
 // Possible additions: .next(), .previous(). 

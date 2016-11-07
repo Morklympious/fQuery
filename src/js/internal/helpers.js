@@ -27,6 +27,16 @@ function _uniques(collection, fn) {
   return collection; 
 }
 
+function _exclude(collection, item) {
+  var at = collection.indexOf(item);
+
+  if(at > -1) {
+    collection.splice(at, 1);
+  }
+
+  return collection;  
+}
+
 /*
     Return an array of Nodes
     Feature set - ES3 (ie8)
@@ -68,6 +78,7 @@ function _elements(collection) {
 module.exports = {
   each     : _each,
   uniques  : _uniques,
+  exclude  : _exclude,
   nodes    : _nodes,
   elements : _elements
 };

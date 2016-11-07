@@ -175,12 +175,18 @@ describe("DOM traversal operations", () => {
     });
 
     it("returns an array of only element nodes", () => {
+      var content  = root.querySelector("#content"),
+          childs = children(content);
 
+      expect(childs[0].nodeType).to.equal(1);
+      expect(childs[1].nodeType).to.equal(1);
+      expect(childs[2].nodeType).to.equal(1); 
     });
   });
 
   describe("siblings(element, selector)", () => {
-    var root;
+    var siblings = _f.dom.siblings,
+        root;
 
     beforeEach(() => {
       root = document.createElement("html");
@@ -188,11 +194,20 @@ describe("DOM traversal operations", () => {
     }); 
 
     it("correctly returns all siblings of a given element", () => {
+      var content = root.querySelector(".feature.article");
 
+      expect(siblings(content).length).to.equal(2);
+      expect(siblings(content)[0].className).to.equal("simple article");
+      expect(siblings(content)[0].tagName).to.equal("DIV");
+      expect(siblings(content)[1].className).to.equal("");
+      expect(siblings(content)[1].tagName).to.equal("FORM");
     });
 
     it("doesn't include itself in the result list", () => {
+      var content = root.querySelector(".feature.article");
 
+      expect(siblings(content).indexOf(content)).to.equal(-1);
+      expect(siblings(content)[0].className).to.equal("simple article");
     });
 
   });
