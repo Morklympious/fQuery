@@ -5,21 +5,24 @@ function find(element, selector) {
   return _elements(element.querySelectorAll(selector));
 }
 
-function query(selector) {
-  return (selector === "body") ? document.body : find(document.body, selector);
+function query(selector, context) {
+  context = context || document.body; 
+
+  return (selector === "body") ? context : find(context, selector);
 }
 
 // find the closest element that matches (includes self)
 function closest(element, selector) {
-  var current = element; 
+  var current  = element,
+      document = element.ownerDocument;
 
-  // If the node has a .matches function, we're still in 
-  // the DOM. If not, we reached the document object. 
-  while(current.matches && !current.matches(selector)) {
+  // While matches is a function and a match is not found
+  while(current.matches && !current.matches(selector) && current.tagName !== "HTML") {
+    // Move up to the parent
     current = parent(current);
   }
 
-  return !(current === document) ? current : false;
+  return (current.matches(selector)) ? current : [];
 }
 
 // Return node parent
