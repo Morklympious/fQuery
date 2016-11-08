@@ -1,16 +1,17 @@
 var helpers   = require("./internal/helpers"),
     _elements = helpers.elements,
-    _exclude  = helpers.exclude;
+    _exclude  = helpers.exclude,
+    _unwrap   = helpers.unwrap;
 
 // Find a nested element
 function find(element, selector) {
-  return _elements(element.querySelectorAll(selector));
+  return _unwrap(_elements(element.querySelectorAll(selector)));
 }
 
 function query(selector, context) {
   context = context || document.body; 
 
-  return (selector === "body") ? context : find(context, selector);
+  return (selector === "body") ? context : _unwrap(find(context, selector));
 }
 
 // find the closest element that matches (includes self)
@@ -33,12 +34,14 @@ function parent(element) {
 
 // Get immediate children
 function children(element) {
-  return _elements(element.childNodes);
+  return _unwrap(_elements(element.childNodes));
 }
 
 function siblings(element, selector) {
-  return selector ? _exclude(find(parent(element), selector), element) :
-                    _exclude(children(parent(element)), element);
+  var result = selector ? _exclude(find(parent(element), selector), element) :
+                          _exclude(children(parent(element)), element);
+  
+  return _unwrap(result);
 }
 
 // Possible additions: .next(), .previous(). 

@@ -13,7 +13,7 @@ function _each(collection, fn) {
   return undefined; 
 }
 
-function _uniques(collection, fn) {
+function _uniques(collection) {
   var at;
 
   _each(collection, function(item, index, items) {
@@ -35,6 +35,10 @@ function _exclude(collection, item) {
   }
 
   return collection;  
+}
+
+function _unwrap(collection) {
+  return collection.length === 1 ? collection[0] : collection; 
 }
 
 /*
@@ -72,13 +76,14 @@ function _elements(collection) {
     }
   });
 
-  return (elements.length === 1) ? elements[0] : elements;
+  return elements;
 }
 
 module.exports = {
   each     : _each,
   uniques  : _uniques,
   exclude  : _exclude,
+  unwrap   : _unwrap,
   nodes    : _nodes,
   elements : _elements
 };

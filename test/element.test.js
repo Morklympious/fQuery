@@ -1,8 +1,8 @@
 var mocha    = require("mocha"),
     expect   = require("chai").expect,
-    Browser  = require("mock-browser").mocks.MockBrowser,
-    document = (new Browser()).getDocument(),
     _f       = require("../src/entry.js");
+
+require("jsdom-global")();
 
 
 describe("Node operations", () => {

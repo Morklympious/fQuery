@@ -7,11 +7,11 @@ var helpers   = require("./internal/helpers"),
     empty     = elem.empty;
 
 // generates usable DOM Markup. 
-function create(html) {
+function create(markup) {
   var fragment  = document.createDocumentFragment(), 
       container = document.createElement("div"); 
 
-  container.innerHTML = html;
+  container.innerHTML = markup;
 
   _each(_elements(container.childNodes), function(element) {
     append(fragment, element);
@@ -30,18 +30,9 @@ function html(element, markup) {
 }
 
 function text(element, content) {
-  
-  if(!content) {
-    return element.textContent || element.innerText;
-  }
+  var prop = element.textContent ? "textContent" : "innerText";
 
-  if(element.innerText) {
-    element.innerText = content;
-
-    return element.innerText;
-  }
-
-  element.textContent = content; 
+  element[prop] = content; 
 
   return element.textContent; 
 }
