@@ -52,7 +52,7 @@ function _nodes(collection) {
   var nodes = [];
 
   _each(collection, function(node) {
-    nodes.push(node);
+    nodes.unshift(node);
   });
 
   return nodes; 
@@ -72,7 +72,7 @@ function _elements(collection) {
 
   _each(nodes, function(node) {
     if(node.nodeType === ELEMENT) {
-      elements.push(node);
+      elements.unshift(node);
     }
   });
 
