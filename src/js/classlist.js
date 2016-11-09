@@ -9,7 +9,7 @@ function classlist(element) {
   var classes = element.className,
       list    = classes.replace(/ +/g, " ").split(" ");
 
-  function _has(cls) {
+  function _contains(cls) {
     return list.indexOf(cls) > -1;
   }
 
@@ -35,7 +35,7 @@ function classlist(element) {
     _each(individuals, function(classname) {
       var at; 
       
-     if(_has(classname)) {
+     if(_contains(classname)) {
         at = list.indexOf(classname);
 
         list.splice(at, 1);
@@ -48,7 +48,7 @@ function classlist(element) {
   return {
     add    : _add,
     remove : _remove,
-    has    : _has
+    has    : _contains
   };
 }
 

@@ -10,8 +10,9 @@ var helpers   = require("./internal/helpers"),
 function create(markup) {
   var fragment  = document.createDocumentFragment(), 
       container = document.createElement("div"); 
-
-  container.innerHTML = markup;
+  
+  // This should regexp to account for spaces between tags.
+  container.innerHTML = _normalize(markup);
 
   _each(_elements(container.childNodes), function(element) {
     append(fragment, element);
@@ -26,15 +27,21 @@ function html(element, markup) {
     append(element, create(markup));
   }
   
-  return element.innerHtml; 
+  return _normalize(element.innerHTML); 
 }
 
 function text(element, content) {
   var prop = element.textContent ? "textContent" : "innerText";
 
-  element[prop] = content; 
+  if(content) {
+    element[prop] = content; 
+  }
+ 
+  return element[prop]; 
+}
 
-  return element.textContent; 
+function _normalize(markup) {
+  return markup.replace(/\> +\</g, "><");
 }
 
 module.exports = {
