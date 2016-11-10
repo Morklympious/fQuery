@@ -37,13 +37,14 @@ describe("Classlist black box testing", () => {
 
     it("can create elements with attributes", () => {
       var markup  = "<ul class='fire'> <li class='ice'></li> <li id='earth'></li> <li data-custom='true'></li> </ul>",
-          root    = create(markup),
-          list    = root.querySelector(".fire"),
-          first   = root.firstChild,
-          items   = root.querySelectorAll("li"),
-          iOne    = root.querySelector(".ice"),
+          html    = create(markup),
+          first   = html.firstChild,
+          items   = html.querySelectorAll("li"),
+          iOne    = html.querySelector(".ice"),
           iTwo    = items[1],
           iThree  = items[2]; 
+
+      root = html; 
 
       expect(items.length === 3);
       expect(root.querySelector("#earth")).to.equal(iTwo);
