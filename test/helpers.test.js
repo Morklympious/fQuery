@@ -1,12 +1,9 @@
-var mocha    = require("mocha"),
-    expect   = require("chai").expect,
-
+var expect   = require("chai").expect,
     helpers  = require("../src/js/internal/helpers");
 
 require("jsdom-global")();
 
 describe("Helper tests", () => {
-  
   describe("each(collection, fn)", () => {
     var _each = helpers.each;
 
@@ -87,7 +84,7 @@ describe("Helper tests", () => {
       var elements =  _elements(root.childNodes),
           works = true;
 
-      helpers.each(elements, function(item, index) {
+      helpers.each(elements, function(item) {
         if(item.nodeType !== Node.ELEMENT_NODE) {
           works = false; 
         }

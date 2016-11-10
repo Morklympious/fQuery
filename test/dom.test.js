@@ -1,5 +1,4 @@
-var mocha    = require("mocha"),
-    expect   = require("chai").expect,
+var expect   = require("chai").expect,
     fs       = require("fs"),
 
     _f       = require("../src/entry.js"),
@@ -8,7 +7,6 @@ var mocha    = require("mocha"),
 require("jsdom-global")();
 
 describe("DOM traversal operations", () => {
-
   describe("find(element, selector)", () => {
     var find = _f.dom.find,
         root; 
@@ -207,6 +205,5 @@ describe("DOM traversal operations", () => {
       expect(siblings(content).indexOf(content)).to.equal(-1);
       expect(siblings(content)[0].className).to.equal("simple article");
     });
-
   });
 });

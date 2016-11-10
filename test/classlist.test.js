@@ -3,8 +3,8 @@ var expect   = require("chai").expect,
 
 require("jsdom-global")();
 
-describe("Markup tests", () => {
-  describe("create(html)", () => {
+describe("Classlist black box testing", () => {
+  describe("Class manipulation", () => {
     var create = _f.markup.create,
         root; 
 
@@ -12,7 +12,7 @@ describe("Markup tests", () => {
       root = null; 
     });
 
-    it("returns a document fragment", () => {
+    it("", () => {
       root = create("");
 
       expect(root instanceof DocumentFragment).to.be.true;
@@ -36,17 +36,16 @@ describe("Markup tests", () => {
     });
 
     it("can create elements with attributes", () => {
-      var markup = "<ul class='fire'> <li class='ice'></li> <li id='earth'></li> <li data-custom='true'></li> </ul>",
-          html = create(markup),
-          first = html.firstChild,
-          items = html.querySelectorAll("li"),
-          iOne  = html.querySelector(".ice"),
-          iTwo  = items[1],
-          iThree = items[2];
+      var markup  = "<ul class='fire'> <li class='ice'></li> <li id='earth'></li> <li data-custom='true'></li> </ul>",
+          root    = create(markup),
+          list    = root.querySelector(".fire"),
+          first   = root.firstChild,
+          items   = root.querySelectorAll("li"),
+          iOne    = root.querySelector(".ice"),
+          iTwo    = items[1],
+          iThree  = items[2]; 
 
-          root = html;  
-
-      expect(items.length).to.equal(3);
+      expect(items.length === 3);
       expect(root.querySelector("#earth")).to.equal(iTwo);
       expect(root.querySelector("[data-custom]")).to.equal(iThree);
       expect(first.tagName).to.equal("UL");

@@ -1,12 +1,10 @@
-var mocha    = require("mocha"),
-    expect   = require("chai").expect,
+var expect   = require("chai").expect,
     _f       = require("../src/entry.js");
 
 require("jsdom-global")();
 
 
 describe("Node operations", () => {
- 
   describe("attr(element, attr, value)", () => {
     var attr = _f.element.attr,
         root = document.createElement("div");
@@ -26,12 +24,11 @@ describe("Node operations", () => {
       root.setAttribute("id", "cool");
       expect(attr(root, "id")).to.equal("cool");
     });
-
   });
 
   describe("removeAttr(element, attr)", () => {
     var remove = _f.element.removeAttr,
-        root   = document.createElement("div")
+        root   = document.createElement("div");
 
     root.setAttribute("id", "Alexander");
     root.setAttribute("class", "Hamilton");
@@ -99,7 +96,6 @@ describe("Node operations", () => {
       addClass(root, "one one two three four four four five six six");
       expect(root.className).to.equal("one two three four five six");
     });
-    
   });
 
   describe("removeClass(element, classes)", () => {
@@ -186,8 +182,8 @@ describe("Node operations", () => {
 
   describe("empty(element)", () => {
     var empty = _f.element.empty,
-        root    = document.createElement("div"),
-        span    = document.createElement("span");
+        root  = document.createElement("div"),
+        span  = document.createElement("span");
 
     root.appendChild(span);
 
@@ -222,5 +218,4 @@ describe("Node operations", () => {
       expect(two.childNodes.length).to.equal(2);
     });
   });
-
 });
