@@ -2,13 +2,19 @@ var helpers  = require("./internal/helpers"),
     _each    = helpers.each,
     _uniques = helpers.uniques;
 
-/*
-    classList element wrapper for ie8 Compat.
-*/
+/**
+ * Wrap an element in a classlist-like object such that it can add and remove classes
+ * in a manner compatible with ie8+ 
+ * 
+ * @param {Node} element - The element to wrap in a classlist object so it can use `.add()`, `.remove()`
+ * etc. 
+ * 
+ * @return {object} The API that acts entirely on the element provided. 
+ */
 function classlist(element) {
   var classes = element.className,
       list    = classes.replace(/ +/g, " ").split(" ");
-
+      
   function _contains(cls) {
     return list.indexOf(cls) > -1;
   }
@@ -19,7 +25,7 @@ function classlist(element) {
     return element; 
   }
 
-  // Add classes to an element
+  // TODO: support native classList if available
   function _add(cls) {
     // Passed in classes split into an array
     var individuals = cls.split(" ");
@@ -27,8 +33,8 @@ function classlist(element) {
     return _set(_uniques(list.concat(individuals)));
   }
 
-  // Remove classes from an element
-  // Naive: assumes no duplicates
+  // Remove classes from an element 
+  // TODO: support native classList if available
   function _remove(cls) {
     var individuals = _uniques(cls.split(" "));
 
