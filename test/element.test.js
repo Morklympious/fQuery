@@ -129,6 +129,23 @@ describe("Node operations", () => {
     });
   });
 
+  describe("css(element, styles)", () => {
+    var css = _f.element.css,
+        root     = document.createElement("div");
+    
+    it("correctly assigns styles", () => {
+      css(root, {
+        color: "red",
+        backgroundColor: "blue",
+        fontSize: "30px"
+      });
+
+      expect(root.style.color).to.equal("red");
+      expect(root.style.backgroundColor).to.equal("blue");
+      expect(root.style.fontSize).to.equal("30px");
+    });
+  });
+
   describe("append(element, appendee)", () => {
     var append = _f.element.append,
         root,

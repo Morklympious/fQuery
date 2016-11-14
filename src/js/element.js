@@ -42,6 +42,19 @@ function removeClass(element, classes) {
   classList(element).remove(classes);
 }
 
+function css(element, styles) {
+  var rule,
+      value; 
+
+  for(rule in styles) {
+    value = styles[rule];
+
+    element.style[rule] = value; 
+  }
+
+  return element; 
+}
+
 // Append node as last child. 
 function append(element, appendee) {
   return element.appendChild(appendee);
@@ -72,6 +85,7 @@ module.exports = {
   value       : value,
   addClass    : addClass,
   removeClass : removeClass,
+  css         : css,
   append      : append,
   prepend     : prepend,
   empty       : empty, 

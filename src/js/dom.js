@@ -44,9 +44,7 @@ function query(selector, context) {
 function closest(element, selector) {
   var current  = element;
 
-  // While matches is a function and a match is not found
   while(current.matches && !current.matches(selector) && current.tagName !== "HTML") {
-    // Move up to the parent
     current = parent(current);
   }
 
