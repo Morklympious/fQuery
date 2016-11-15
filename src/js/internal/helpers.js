@@ -1,7 +1,13 @@
-/*
-    Implementing common operations in a functional style -- ie8 compat. 
-*/
-
+/**
+ * A for-each loop type function that can be run on arrays, it begins from the end of the list for the 
+ * reason that it makes the burden on duplicate removal using indexOf far lighter. IE8 doesn't support Array.forEach
+ * so this fulfills that functionality. 
+ * 
+ * @param {array} collection - The array to run `fn` against
+ * @param {function} fn - The function that accepts each element, index, and the collection itself. 
+ * 
+ * @return {undefined} undefined. 
+ */
 function _each(collection, fn) {
   var i,
       size = collection.length;
@@ -13,6 +19,13 @@ function _each(collection, fn) {
   return undefined; 
 }
 
+/**
+ * A function that runs along an array and returns only the unique values
+ * 
+ * @param {array} collection - The array to filter for uniques
+ * 
+ * @return {array} A new array containing the unique elements from `collection`. 
+ */
 function _uniques(collection) {
   var at;
 
@@ -27,6 +40,14 @@ function _uniques(collection) {
   return collection; 
 }
 
+/**
+ * Excludes an element from an array
+ * 
+ * @param {array} collection - The array to search through for exclusions
+ * @param {any} item - The function that accepts each element, index, and the collection itself. 
+ * 
+ * @return {array} the collection without the specified item
+ */
 function _exclude(collection, item) {
   var at = collection.indexOf(item);
 
@@ -37,17 +58,27 @@ function _exclude(collection, item) {
   return collection;  
 }
 
+/**
+ * Unwraps an element from an array if it's the only element in the array. This was created
+ * to allow selectors that match to only a single DOM element to be interactive without having to
+ * grab the first element of the returned collection array. 
+ * 
+ * @param {array} collection - The array of data
+ * 
+ * @return {any|array} the item as-is or an array of items
+ */
 function _unwrap(collection) {
   return collection.length === 1 ? collection[0] : collection; 
 }
 
-/*
-    Return an array of Nodes
-    Feature set - ES3 (ie8)
-    NOTE: ie8 will return elements only from this. 
-    All other browsers will return whitespace/text 
-    in addition. 
-*/
+/**
+ * Returns all nodes of an array collection. This function can also be used generically for 
+ * almost any data type, but it should only be used with DOM elements. 
+ * 
+ * @param {array} collection - The array to search through for child Nodes
+ * 
+ * @return {array} the collection of all Nodes. 
+ */
 function _nodes(collection) {
   var nodes = [];
 
@@ -58,13 +89,14 @@ function _nodes(collection) {
   return nodes; 
 }
 
-/*  
-    Return an array of Elements
-    Feature set - ES3 (ie8)
-    NOTE: ie8 will return only elements from this. 
-    All other browsers will return whitespace/text nodes
-    in addition. 
-*/
+/**
+ * Filters Element nodes of an array of Nodes. This filters out every node that is NOT and element node
+ * (e.g. TextNode, CommentNode, AttributeNode, etc.) 
+ * 
+ * @param {array} collection - The array to search through for elements
+ * 
+ * @return {array} a new array containing only elements
+ */
 function _elements(collection) {
   var nodes    = _nodes(collection),
       elements = [],
