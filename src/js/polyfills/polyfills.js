@@ -1,54 +1,73 @@
-/* eslint-disable */
-/* 
-    indexOf Polyfill for ie8. 
-*/
-function _indexOf() {
-  if(!global.Array.prototype.indexOf) {
-    Array.prototype.indexOf = function(elt /* , from*/) {
-      var len = this.length >>> 0;
+var helpers = require("../internal/helpers"),
+    _each   = helpers.each; 
 
-      var from = Number(arguments[1]) || 0;
+(function() {
+  var indexOf = Array.prototype.indexOf;
 
-      from = (from < 0) ? 
-        Math.ceil(from) :
-        Math.floor(from);
+  function _polyfill(item /* , from*/) {
+    var self     = this,
+        len      = self.length >>> 0,
+        start    = Number(arguments[1]) || 0,
+        negative = start < 0, 
 
-      if(from < 0) {
-        from += len;
+        ceiling = Math.ceil,
+        floor   = Math.floor;
+
+    start = (negative) ? ceiling(start) : floor(start);
+
+    if(negative) {
+      start += len;
+    }
+
+    for(; start < len; start++) {
+      if(start in this && this[start] === item) {
+        return start;
       }
+    }
 
-      for(; from < len; from++) {
-        if(from in this && this[from] === elt) {
-          return from;
-        }
-      }
-
-      return -1;
-    };
+    return -1;
   }
-}
 
-function _matches() {
-  Element.prototype.matches = 
-    Element.prototype.matchesSelector || 
-    Element.prototype.mozMatchesSelector ||
-    Element.prototype.msMatchesSelector || 
-    Element.prototype.oMatchesSelector || 
-    Element.prototype.webkitMatchesSelector ||
-    function(s) {
-        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-            i = matches.length;
+  if(!indexOf) {
+    Array.prototype.indexOf = _polyfill;
+  }
+}())(function() {  
+  var matches = Element.prototype.matches;
 
-        while(--i >= 0 && matches.item(i) !== this) { }
+  // Look for other implementations to use
+  // Otherwise, just polyfill with a function.
+  function _fix() {
+    var prefixes = [ "moz", "ms", "o", "webkit", "" ],
+    
+    _each(prefixes, function(prefix) {
+      var current = Element.prototype[ prefix + "MatchesSelector" ];
+
+      if(current) {
+        matches = current;
+
+        return; 
+      }
+    });
+
+    _polyfill(matches);
+  }
+
+  // The polyfill if there aren't other implementations
+  function _polyfill(proto) {
+    proto = function(s) {
+        var m = (this.document || this.ownerDocument).querySelectorAll(s),
+            i = m.length;
+
+        while(--i >= 0 && m.item(i) !== this) { }
 
         return i > -1;            
     };
-}
-
-module.exports = {
-  initialize : {
-    indexOf : _indexOf,
-    matches : _matches
   }
-};
+
+  if(!Element.prototype.matches) {
+    _fix();
+  }
+    
+}());
+
 
