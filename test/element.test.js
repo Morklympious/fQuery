@@ -135,9 +135,9 @@ describe("Node operations", () => {
     
     it("correctly assigns styles", () => {
       css(root, {
-        color: "red",
-        backgroundColor: "blue",
-        fontSize: "30px"
+        color           : "red",
+        backgroundColor : "blue",
+        fontSize        : "30px"
       });
 
       expect(root.style.color).to.equal("red");

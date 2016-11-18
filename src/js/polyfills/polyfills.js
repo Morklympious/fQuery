@@ -6,7 +6,7 @@ var helpers = require("../internal/helpers"),
 
   function _polyfill(item /* , from*/) {
     var self     = this,
-        len      = self.length >>> 0,
+        len      = self.length,
         start    = Number(arguments[1]) || 0,
         negative = start < 0, 
 
@@ -31,16 +31,19 @@ var helpers = require("../internal/helpers"),
   if(!indexOf) {
     Array.prototype.indexOf = _polyfill;
   }
-}())(function() {  
+}());
+
+(function() {  
   var matches = Element.prototype.matches;
 
   // Look for other implementations to use
   // Otherwise, just polyfill with a function.
   function _fix() {
-    var prefixes = [ "moz", "ms", "o", "webkit", "" ],
+    var prefixes = [ "moz", "ms", "o", "webkit", "" ];
     
     _each(prefixes, function(prefix) {
-      var current = Element.prototype[ prefix + "MatchesSelector" ];
+      var key     = prefix + "MatchesSelector",
+          current = Element.prototype[key];
 
       if(current) {
         matches = current;
@@ -49,12 +52,12 @@ var helpers = require("../internal/helpers"),
       }
     });
 
-    _polyfill(matches);
+    _polyfill();
   }
 
   // The polyfill if there aren't other implementations
-  function _polyfill(proto) {
-    proto = function(s) {
+  function _polyfill() {
+    Element.prototype.matches = function(s) {
         var m = (this.document || this.ownerDocument).querySelectorAll(s),
             i = m.length;
 
@@ -64,10 +67,9 @@ var helpers = require("../internal/helpers"),
     };
   }
 
-  if(!Element.prototype.matches) {
+  if(!matches) {
     _fix();
   }
-    
 }());
 
 

@@ -20,7 +20,7 @@ function _each(collection, fn) {
 }
 
 /**
- * A function that runs along an array and returns only the unique values
+ * A function that runs along an array and returns only unique values
  * 
  * @param {array} collection - The array to filter for uniques
  * 
