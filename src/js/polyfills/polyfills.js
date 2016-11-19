@@ -61,7 +61,9 @@ var helpers = require("../internal/helpers"),
         var m = (this.document || this.ownerDocument).querySelectorAll(s),
             i = m.length;
 
-        while(--i >= 0 && m.item(i) !== this) { }
+        while(--i >= 0 && m.item(i) !== this) { 
+          null; 
+        }
 
         return i > -1;            
     };

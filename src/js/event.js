@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 function add(element, type, handler) {
   var listen = element.addEventListener;
 

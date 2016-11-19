@@ -1,11 +1,20 @@
 var expect   = require("chai").expect,
-    helpers  = require("../src/js/internal/helpers");
+    helpers  = {}; 
 
 require("jsdom-global")();
 
 describe("Helper tests", () => {
+  before(() => {
+    require("./lib/compile")("./src/js/internal/helpers.js", helpers);
+  });
+
   describe("each(collection, fn)", () => {
-    var _each = helpers.each;
+    var _each;
+
+    before(() => {
+      _each = helpers.exports.each;
+    });   
+
 
     it("runs through each element", () => {
       var collection = [];
@@ -19,7 +28,12 @@ describe("Helper tests", () => {
   });
 
   describe("_uniques(collection)", () => {
-    var _uniques = helpers.uniques;
+    var _uniques;
+
+    before(() => {
+      _uniques = helpers.exports.uniques;
+    });   
+
 
     it("returns only unique entries", () => {
       var specials =  _uniques([ 1, 2, 4, 5, 6, 2, 3, 4, 5 ]);
@@ -30,7 +44,11 @@ describe("Helper tests", () => {
   });
 
   describe("_exclude(collection, item)", () => {
-    var _exclude = helpers.exclude;
+    var _exclude;
+
+    before(() => {
+      _exclude = helpers.exports.exclude;
+    });   
 
     it("excludes the specified element in the collection", () => {
       var excluded =  _exclude([ 1, 2, 4, 5, 6 ], 6);
@@ -41,7 +59,11 @@ describe("Helper tests", () => {
   });
 
   describe("_unwrap(collection)", () => {
-    var _unwrap = helpers.unwrap;
+    var _unwrap;
+
+    before(() => {
+      _unwrap = helpers.exports.unwrap;
+    });   
 
     it("returns an unwrapped element if the collection.length === 1", () => {
       var unwrapped =  _unwrap([ 1 ]);
@@ -59,10 +81,15 @@ describe("Helper tests", () => {
   });
 
   describe("_nodes(collection)", () => {
-    var _nodes = helpers.nodes,
-        root   = document.createElement("div");
+    var _nodes,
+        root;
 
-    root.innerHTML = "<!--wow--> <ul></ul> <div></div>";
+    before(() => {
+      _nodes = helpers.exports.nodes;
+      root   = document.createElement("div");
+
+      root.innerHTML = "<!--wow--> <ul></ul> <div></div>";
+    });   
 
     it("pushes all child nodes into an array", () => {
       var nodes =  _nodes(root.childNodes);
@@ -75,16 +102,24 @@ describe("Helper tests", () => {
   });
 
   describe("_elements(collection)", () => {
-    var _elements = helpers.elements,
-    root   = document.createElement("div");
+    var _elements,
+        _each,
+        root;
 
-    root.innerHTML = "<!--wow--> <ul></ul> <div></div>";
-    
+    before(() => {
+      _elements = helpers.exports.elements;
+      _each     = helpers.exports.each;
+      root   = document.createElement("div");
+
+      root.innerHTML = "<!--wow--> <ul></ul> <div></div>";
+    });       
+
+
     it("pushes elements only", () => {
       var elements =  _elements(root.childNodes),
-          works = true;
+          works    = true;
 
-      helpers.each(elements, function(item) {
+      _each(elements, function(item) {
         if(item.nodeType !== Node.ELEMENT_NODE) {
           works = false; 
         }

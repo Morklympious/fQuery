@@ -1,11 +1,9 @@
 import element from "./js/element";
-import dom     from "./js/dom";
-import markup  from "./js/markup";
+import dom from "./js/dom";
+import markup from "./js/markup";
 
 
-require("./js/polyfills/polyfills");
-
-global._f = module.exports = {
+export default {
   query   : dom.query,
   dom     : dom,
   element : element,

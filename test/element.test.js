@@ -1,13 +1,22 @@
 var expect   = require("chai").expect,
-    _f       = require("../src/entry.js");
+    _f       = {};
 
 require("jsdom-global")();
 
 
 describe("Node operations", () => {
+
+  before(() => {
+    require("./lib/compile")("./src/entry.js", _f);
+  });
+
   describe("attr(element, attr, value)", () => {
-    var attr = _f.element.attr,
+    var attr,
         root = document.createElement("div");
+
+    before(() => {
+       attr = _f.exports.element.attr;
+    });
 
     root.setAttribute("id", "Alexander");
     root.setAttribute("class", "Hamilton");
@@ -27,8 +36,12 @@ describe("Node operations", () => {
   });
 
   describe("removeAttr(element, attr)", () => {
-    var remove = _f.element.removeAttr,
+    var remove,
         root   = document.createElement("div");
+
+    before(() => {
+       remove = _f.exports.element.removeAttr;
+    });
 
     root.setAttribute("id", "Alexander");
     root.setAttribute("class", "Hamilton");
@@ -51,8 +64,12 @@ describe("Node operations", () => {
   });
 
   describe("value(element, val)", () => {
-    var value = _f.element.value,
+    var value,
         root  = document.createElement("input");
+
+    before(() => {
+       value = _f.exports.element.value;
+    });
 
     root.value = "test";
 
@@ -68,9 +85,13 @@ describe("Node operations", () => {
   });
 
   describe("addClass(element, classes)", () => {
-    var addClass = _f.element.addClass,
+    var addClass,
         root     = document.createElement("div");
-    
+
+    before(() => {
+       addClass = _f.exports.element.addClass;
+    });  
+
     beforeEach(() => {
       root.className = "one two three four";
     });  
@@ -99,9 +120,13 @@ describe("Node operations", () => {
   });
 
   describe("removeClass(element, classes)", () => {
-    var removeClass = _f.element.removeClass,
+    var removeClass,
         root     = document.createElement("div");
-    
+
+    before(() => {
+       removeClass = _f.exports.element.removeClass;
+    });
+
     beforeEach(() => {
       root.className = "one two three four";
     });  
@@ -130,8 +155,12 @@ describe("Node operations", () => {
   });
 
   describe("css(element, styles)", () => {
-    var css = _f.element.css,
+    var css,
         root     = document.createElement("div");
+
+    before(() => {
+       css = _f.exports.element.css;
+    });    
     
     it("correctly assigns styles", () => {
       css(root, {
@@ -147,13 +176,17 @@ describe("Node operations", () => {
   });
 
   describe("append(element, appendee)", () => {
-    var append = _f.element.append,
+    var append,
         root,
         span   = document.createElement("span");
-    
+
+    before(() => {
+       append = _f.exports.element.append;
+    });  
+
     beforeEach(() => {
       root = document.createElement("div");
-    });  
+    });
 
     it("can correctly append child node", () => {
       append(root, span);
@@ -172,10 +205,14 @@ describe("Node operations", () => {
   });
 
   describe("prepend(element, prependee)", () => {
-    var prepend = _f.element.prepend,
+    var prepend,
         root,
         span    = document.createElement("span");
-    
+
+    before(() => {
+       prepend = _f.exports.element.prepend;
+    });   
+
     beforeEach(() => {
       root = document.createElement("div");
     });  
@@ -198,9 +235,13 @@ describe("Node operations", () => {
   });
 
   describe("empty(element)", () => {
-    var empty = _f.element.empty,
+    var empty,
         root  = document.createElement("div"),
         span  = document.createElement("span");
+
+    before(() => {
+       empty = _f.exports.element.empty;
+    });  
 
     root.appendChild(span);
 
@@ -211,16 +252,24 @@ describe("Node operations", () => {
   });
 
   describe("clone(element)", () => {
-    var clone    = _f.element.clone,
-        root     = document.createElement("div"),
+    var clone,
+        root,
         two;
-    
-    root.setAttribute("class", "one two three");
-    root.setAttribute("data-custom", "fire");
-    root.appendChild(document.createElement("input"));
-    root.appendChild(document.createElement("i"));
 
-    two = clone(root, true);
+    before(() => {
+      clone = _f.exports.element.clone;
+
+      root = document.createElement("div");
+      root.setAttribute("class", "one two three");
+      root.setAttribute("data-custom", "fire");
+      root.appendChild(document.createElement("input"));
+      root.appendChild(document.createElement("i"));
+    });  
+
+    beforeEach(() => {
+      two = clone(root, true);
+    });
+
 
     it("clones a node (attributes and all)", () => {
       expect(two.tagName).to.equal("DIV");

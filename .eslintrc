@@ -1,0 +1,22 @@
+{
+  "extends":"arenanet",
+  "rules":{
+    "no-redeclare": 0,
+    "quote-props": 0,
+    "block-scoped-var": 0 // For default params
+  },
+  "globals":{
+    "it":true,
+    "describe":true,
+    "before":true,
+    "beforeEach": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

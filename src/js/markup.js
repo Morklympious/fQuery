@@ -1,5 +1,5 @@
 import helpers from "./internal/helpers";
-import elem    from "./element";
+import elem from "./element";
 
 var _each     = helpers.each,
     _elements = helpers.elements,

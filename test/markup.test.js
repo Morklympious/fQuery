@@ -1,12 +1,22 @@
 var expect   = require("chai").expect,
-    _f       = require("../src/entry.js");
+    _f       = {};
 
-require("jsdom-global")();
+
 
 describe("Markup tests", () => {
+
+  before(() => {
+    require("./lib/compile")("./src/entry.js", _f);
+  });
+
+
   describe("create(html)", () => {
-    var create = _f.markup.create,
+    var create,
         root; 
+
+    before(() => {
+      create = _f.exports.markup.create;
+    });  
 
     beforeEach(() => {
       root = null; 
@@ -58,8 +68,12 @@ describe("Markup tests", () => {
   });
 
   describe("html(element, markup)", () => {
-    var html = _f.markup.html,
+    var html,
         root;
+
+    before(() => {
+      html = _f.exports.markup.html;
+    });  
 
     beforeEach(() => {
       root = document.createElement("div"); 
@@ -95,8 +109,12 @@ describe("Markup tests", () => {
   });
 
   describe("text(element, content)", () => {
-    var text = _f.markup.text,
+    var text,
         root;
+  
+    before(() => {
+      text = _f.exports.markup.text;
+    });  
 
     beforeEach(() => {
       root = document.createElement("div"); 

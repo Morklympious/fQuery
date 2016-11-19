@@ -1,15 +1,24 @@
 var expect   = require("chai").expect,
     fs       = require("fs"),
+    _f       = {},
 
-    _f       = require("../src/entry.js"),
     mock     = fs.readFileSync("./test/html/structure.html");
 
 require("jsdom-global")();
 
 describe("DOM traversal operations", () => {
+
+  before(() => {
+    require("./lib/compile")("./src/entry.js", _f);
+  });
+
   describe("find(element, selector)", () => {
-    var find = _f.dom.find,
+    var find,
         root; 
+
+    before(() => {
+       find = _f.exports.dom.find;
+    });
 
     beforeEach(() => {
       root = document.createElement("html");
@@ -78,8 +87,12 @@ describe("DOM traversal operations", () => {
   });
 
   describe("closest(element, selector)", () => {
-    var closest = _f.dom.closest,
+    var closest,
         root;
+
+    before(() => {
+       closest = _f.exports.dom.closest;
+    });
 
     beforeEach(() => {
       root = document.createElement("html");
@@ -136,8 +149,12 @@ describe("DOM traversal operations", () => {
   });
 
   describe("parent(element)", () => {
-    var parent = _f.dom.parent,
+    var parent,
         root;
+
+    before(() => {
+       parent = _f.exports.dom.parent;
+    });
 
     beforeEach(() => {
       root = document.createElement("html");
@@ -155,8 +172,12 @@ describe("DOM traversal operations", () => {
   });
 
   describe("children(element)", () => {
-    var children = _f.dom.children,
+    var children,
         root;
+
+    before(() => {
+       children = _f.exports.dom.children;
+    });
 
     beforeEach(() => {
       root = document.createElement("html");
@@ -181,8 +202,12 @@ describe("DOM traversal operations", () => {
   });
 
   describe("siblings(element, selector)", () => {
-    var siblings = _f.dom.siblings,
+    var siblings,
         root;
+
+    before(() => {
+       siblings = _f.exports.dom.siblings;
+    });
 
     beforeEach(() => {
       root = document.createElement("html");

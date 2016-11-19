@@ -111,7 +111,7 @@ function _elements(collection) {
   return elements;
 }
 
-module.exports = {
+export default {
   each     : _each,
   uniques  : _uniques,
   exclude  : _exclude,

@@ -4,7 +4,7 @@
   "description": "A lighter, jQuery like tool that makes use of stateless functions to query the DOM",
   "main": "src/entry.js",
   "scripts": {
-    "build": "npm run lint && rollup --config",
+    "build": "rollup --config",
     "develop": "rollup --config --watch",
     "lint": "eslint src/"
   },
@@ -24,7 +24,7 @@
     "chai": "^3.5.0",
     "eslint": "^2.9.0",
     "eslint-config-arenanet": "^3.0.1",
-    "jsdom": "9.8.3",
+    "jsdom": "^9.8.3",
     "jsdom-global": "2.1.0",
     "minifyify": "^7.3.2",
     "mocha": "^3.1.2",
@@ -34,6 +34,7 @@
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^2.5.0",
     "shelljs": "^0.7.0",
+    "vm": "^0.1.0",
     "watchify": "^3.7.0"
   },
   "dependencies": {

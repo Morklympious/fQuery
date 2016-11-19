@@ -1,5 +1,5 @@
 import classlist from "./classlist";
-import dom       from "./dom";
+import dom from "./dom";
 
 /**
  * a getter/setter function that modifies attributes on elements. 
