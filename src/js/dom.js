@@ -1,5 +1,6 @@
-var helpers   = require("./internal/helpers"),
-    _elements = helpers.elements,
+import helpers from "./internal/helpers";
+
+var _elements = helpers.elements,
     _exclude  = helpers.exclude,
     _unwrap   = helpers.unwrap;
 
@@ -89,7 +90,7 @@ function siblings(element, selector) {
   return _unwrap(result);
 }
 
-module.exports = {
+export default {
   query    : query, 
   find     : find,
   closest  : closest,

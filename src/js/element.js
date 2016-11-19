@@ -1,5 +1,5 @@
-var classlist = require("./classlist"),
-    dom       = require("./dom");
+import classlist from "./classlist";
+import dom       from "./dom";
 
 /**
  * a getter/setter function that modifies attributes on elements. 
@@ -141,7 +141,7 @@ function remove(element) {
   return dom.parent(element).removeChild(element);
 }
 
-module.exports = {
+export default {
   attr        : attr,
   removeAttr  : removeAttr,
   value       : value,

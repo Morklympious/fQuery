@@ -1,6 +1,7 @@
-var element = require("./js/element"),
-    dom     = require("./js/dom"),
-    markup  = require("./js/markup");
+import element from "./js/element";
+import dom     from "./js/dom";
+import markup  from "./js/markup";
+
 
 require("./js/polyfills/polyfills");
 

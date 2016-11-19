@@ -1,5 +1,6 @@
-var helpers  = require("./internal/helpers"),
-    _each    = helpers.each,
+import helpers from "./internal/helpers";
+
+var _each    = helpers.each,
     _uniques = helpers.uniques;
 
 /**
@@ -58,4 +59,4 @@ function classlist(element) {
   };
 }
 
-module.exports = classlist; 
+export default classlist; 

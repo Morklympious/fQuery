@@ -1,8 +1,9 @@
-var helpers   = require("./internal/helpers"),
-    _each     = helpers.each,
+import helpers from "./internal/helpers";
+import elem    from "./element";
+
+var _each     = helpers.each,
     _elements = helpers.elements,
 
-    elem      = require("./element"),
     append    = elem.append,
     empty     = elem.empty;
 
@@ -74,7 +75,7 @@ function _normalize(markup) {
   return markup.replace(/\> +\</g, "><");
 }
 
-module.exports = {
+export default {
   create : create,
   html   : html,
   text   : text
