@@ -1,3 +1,6 @@
+/**
+ * @module element
+ */
 import classlist from "./classlist";
 import dom from "./dom";
 

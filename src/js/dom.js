@@ -1,3 +1,6 @@
+/**
+ * @module dom
+ */
 import helpers from "./internal/helpers";
 
 var _elements = helpers.elements,

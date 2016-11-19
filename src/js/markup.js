@@ -1,3 +1,6 @@
+/**
+ * @module markup
+ */
 import helpers from "./internal/helpers";
 import elem from "./element";
 
@@ -66,7 +69,7 @@ function text(element, content) {
 
 /**
  * Helper function to remove excess space between html tags
- * 
+ * @private
  * @param {Node} markup - The markup to sanitize for spaces. 
  * 
  * @return {string} The normalized markup with no extraneous spaces. 
