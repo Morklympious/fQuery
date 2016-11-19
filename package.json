@@ -4,13 +4,13 @@
   "description": "A lighter, jQuery like tool that makes use of stateless functions to query the DOM",
   "main": "src/entry.js",
   "scripts": {
-    "build": "npm run lint && node build-bundle.js",
-    "develop": "node build-server.js",
+    "build": "npm run lint && rollup --config",
+    "develop": "rollup --config --watch",
     "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/morklympious/stackpack.git"
+    "url": "https://github.com/morklympious/functional-dom-query.git"
   },
   "keywords": [
     "DOM",
@@ -29,7 +29,14 @@
     "minifyify": "^7.3.2",
     "mocha": "^3.1.2",
     "mock-browser": "^0.92.12",
+    "rollup": "^0.36.3",
+    "rollup-plugin-buble": "^0.14.0",
+    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^2.5.0",
     "shelljs": "^0.7.0",
     "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "rollup-plugin-uglify": "^1.0.1"
   }
 }
