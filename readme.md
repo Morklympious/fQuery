@@ -20,3 +20,7 @@ I wanted to make a jQuery-esque implementation that used all of my favorite part
 - Dogfooding - I can reuse functions I've already defined in a fairly straightforward and understandable way!
 
 _It's even ie8 compatible, too!_
+
+## On the radar
+
+- Events
