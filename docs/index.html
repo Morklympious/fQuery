@@ -46,7 +46,7 @@
   </div>
 </header>
 
-<nav class="navigation" data-ice="nav"><ul class="nav-accordion-menu animated hidden" data-nav-id="docs-nav-id-1479679767687" data-ice="navData">
+<nav class="navigation" data-ice="nav"><ul class="nav-accordion-menu animated hidden" data-nav-id="docs-nav-id-1479680886773" data-ice="navData">
 <li data-ice="navGroup" class="has-children"><input type="checkbox" name="group-0" id="group-0" checked><label for="group-0" class="nav-header">Local Source</label>
    <ul>
       
@@ -100,7 +100,7 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="fquery">fQuery</h1>
 <p>I&apos;ve been working on this functional implementation of jQuery.</p>
 <p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
 <ul>
@@ -109,11 +109,14 @@
 <li>Markup creation</li>
 <li>Events</li>
 </ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
+<p>All sort of vaguely in the <em>style</em> of jQuery. There&apos;s a genius in the brevity that Resig and the jQuery team have brought to the way that web developers interact with and modify the DOM. The API for fQuery is very similar in its naming conventions, the only difference being the way that these functions are called. </p>
 <h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
+<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. I decided to do this in a functional style for a few reasons:</p>
+<ul>
+<li>Stateless functions are amazing. You can always expect the output as a function of the input.</li>
+<li>Chaining - It&apos;s possible to chain these methods together a la lodash or some other functional equivalent.</li>
+<li>Dogfooding - I can reuse functions I&apos;ve already defined in a fairly straightforward and understandable way!</li>
+</ul>
 <p><em>It&apos;s even ie8 compatible, too!</em></p>
 </div>
 </div>

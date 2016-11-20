@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup --config",
     "develop": "rollup --config --watch",
-    "docs": "esdoc -c esdoc.json",
+    "docs": "esdoc -c .esdocrc",
     "lint": "eslint src/"
   },
   "repository": {
