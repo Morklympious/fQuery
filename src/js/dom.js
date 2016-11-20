@@ -29,10 +29,8 @@ function find(element, selector) {
  * 
  * @returns {array|Node} A single element or collection of elements that match the query
  */
-function query(selector, context) {
-  context = context || document.body; 
-
-  return (selector === "body") ? context : _unwrap(find(context, selector));
+function query(selector, context = document.body) {
+  return (selector === "body") ? context : find(context, selector);
 }
 
 // find the closest element that matches (includes self)
@@ -48,6 +46,7 @@ function query(selector, context) {
 function closest(element, selector) {
   var current  = element;
 
+  // Keep looking up the DOM if our current element doesn't match, stop at <html>
   while(current.matches && !current.matches(selector) && current.tagName !== "HTML") {
     current = parent(current);
   }
