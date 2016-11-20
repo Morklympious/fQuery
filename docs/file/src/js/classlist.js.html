@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/js/classlist.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/mdl/material.min.css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/mdl/material.override.css">
@@ -100,22 +100,71 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
-<p>I&apos;ve been working on this functional implementation of jQuery.</p>
-<p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
-<ul>
-<li>DOM traversal</li>
-<li>Element modification</li>
-<li>Markup creation</li>
-<li>Events</li>
-</ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
-<h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
-<p><em>It&apos;s even ie8 compatible, too!</em></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/classlist.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import helpers from &quot;./internal/helpers&quot;;
+
+var _each    = helpers.each,
+    _uniques = helpers.uniques;
+
+/**
+ * Wrap an element in a classlist-like object such that it can add and remove classes
+ * in a manner compatible with ie8+ 
+ * 
+ * @param {Node} element - The element to wrap in a classlist object so it can use `.add()`, `.remove()`
+ * etc. 
+ * 
+ * @return {object} The API that acts entirely on the element provided. 
+ */
+function classlist(element) {
+  var classes = element.className,
+      list    = classes.replace(/ +/g, &quot; &quot;).split(&quot; &quot;);
+      
+  function _contains(cls) {
+    return list.indexOf(cls) &gt; -1;
+  }
+
+  function _set(cls) {
+    element.className = cls.join(&quot; &quot;).trim();
+
+    return element; 
+  }
+
+  // TODO: support native classList if available
+  function _add(cls) {
+    // Passed in classes split into an array
+    var individuals = cls.split(&quot; &quot;);
+
+    return _set(_uniques(list.concat(individuals)));
+  }
+
+  // Remove classes from an element 
+  // TODO: support native classList if available
+  function _remove(cls) {
+    var individuals = _uniques(cls.split(&quot; &quot;));
+
+    _each(individuals, function(classname) {
+      var at; 
+      
+     if(_contains(classname)) {
+        at = list.indexOf(classname);
+
+        list.splice(at, 1);
+      }
+    });
+
+    _set(list);
+  }
+
+  return {
+    add    : _add,
+    remove : _remove,
+    has    : _contains
+  };
+}
+
+export default classlist; 
+</code></pre>
+
 </div>
 
 <footer class="footer">

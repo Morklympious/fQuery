@@ -19,7 +19,7 @@ var _each     = helpers.each,
  * 
  * @return {Node|DocumentFragment} The result of your HTML input, appendable to the DOM.
  */
-function create(markup) {
+export function create(markup) {
   var fragment  = document.createDocumentFragment(), 
       container = document.createElement("div"); 
   
@@ -42,7 +42,7 @@ function create(markup) {
  * 
  * @return {Node} The element that was appended to the parent
  */
-function html(element, markup) {
+export function html(element, markup) {
   if(markup) {
     empty(element);
     append(element, create(markup));
@@ -57,7 +57,7 @@ function html(element, markup) {
  * @param {Node} element - The element on which to retrieve or set text
  * @param {string|number} [content] - The content to set for the element's text value
  */
-function text(element, content) {
+export function text(element, content) {
   var prop = element.textContent ? "textContent" : "innerText";
 
   if(content) {

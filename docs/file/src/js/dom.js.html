@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/js/dom.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/mdl/material.min.css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/mdl/material.override.css">
@@ -100,22 +100,112 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
-<p>I&apos;ve been working on this functional implementation of jQuery.</p>
-<p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
-<ul>
-<li>DOM traversal</li>
-<li>Element modification</li>
-<li>Markup creation</li>
-<li>Events</li>
-</ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
-<h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
-<p><em>It&apos;s even ie8 compatible, too!</em></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/dom.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @module DOM
+ */
+import helpers from &quot;./internal/helpers&quot;;
+
+var _elements = helpers.elements,
+    _exclude  = helpers.exclude,
+    _unwrap   = helpers.unwrap;
+
+/**
+ * Finds an element by selector within a context. If child elements in 
+ * element match selector, they are added to the return result
+ * 
+ * @param {Node} element - The element to search for children inside of
+ * @param {string} selector - The CSS selector to match elements against
+ * 
+ * @returns {array|Node} A single element or collection of elements that match the query
+ */
+export function find(element, selector) {
+  return _unwrap(_elements(element.querySelectorAll(selector)));
+}
+
+/**
+ * Finds an element by selector within the context of context (document.body 
+ * if no context is supplied). This is a bare-bones analog of jQuery&apos;s `$()`
+ * 
+ * @param {string} selector - The CSS selector to match elements against
+ * @param {Node} context - The element to search inside of
+ * 
+ * @returns {array|Node} A single element or collection of elements that match the query
+ */
+export function query(selector, context = document.body) {
+  return (selector === &quot;body&quot;) ? context : find(context, selector);
+}
+
+// find the closest element that matches (includes self)
+/**
+ * Finds the closest parent element of element that matches selector
+ * starting with the element this function was passed
+ * 
+ * @param {Node} element - The element from which to begin the search
+ * @param {string} selector - The CSS selector to match elements against
+ * 
+ * @returns {Node} The first ancestor element that matches the query
+ */
+export function closest(element, selector) {
+  var current  = element;
+
+  // Keep looking up the DOM if our current element doesn&apos;t match, stop at &lt;html&gt;
+  while(current.matches &amp;&amp; !current.matches(selector) &amp;&amp; current.tagName !== &quot;HTML&quot;) {
+    current = parent(current);
+  }
+
+  return (current.matches(selector)) ? current : [];
+}
+
+/**
+ * Returns the immediate parent of a given node
+ * 
+ * @param {Node} element - The element from which to return a parent
+ * 
+ * @return {Node} element - The parent element of the element passed in
+ */
+export function parent(element) {
+  return element.parentNode;
+}
+
+/**
+ * Returns an array of children of the passed in element. Will return a single element
+ * if the array contains only one child. 
+ * 
+ * @param {Node} element - The element from which to retrieve children
+ * 
+ * @return {array|Node} element - The children of element
+ */
+export function children(element) {
+  return _unwrap(_elements(element.childNodes));
+}
+
+/**
+ * Returns siblings of a given node. If a selector is specified, it will
+ * return only the siblings that match that selector. 
+ * 
+ * @param {Node} element - The element from which to return a parent
+ * @param {string} selector - the selector to match elements against
+ * 
+ * @return {array|Node} element - The sibling(s) of the element passed in. 
+ */
+export function siblings(element, selector) {
+  var result = selector ? _exclude(find(parent(element), selector), element) :
+                          _exclude(children(parent(element)), element);
+  
+  return _unwrap(result);
+}
+
+export default {
+  query, 
+  find,
+  closest,
+  parent,
+  children,
+  siblings
+};
+</code></pre>
+
 </div>
 
 <footer class="footer">

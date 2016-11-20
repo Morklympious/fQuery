@@ -1,0 +1,2584 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/entry.js",
+    "memberof": null,
+    "longname": "src/entry.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import element from \"./js/element\";\r\nimport dom from \"./js/dom\";\r\nimport markup from \"./js/markup\";\r\n\r\n\r\nexport default {\r\n  query   : dom.query,\r\n  dom     : dom,\r\n  element : element,\r\n  markup  : markup\r\n};\r\n\r\n",
+    "___id": "T000002R000002",
+    "___s": true
+  },
+  {
+    "__docId__": 1,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/classlist.js",
+    "memberof": null,
+    "longname": "src/js/classlist.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import helpers from \"./internal/helpers\";\r\n\r\nvar _each    = helpers.each,\r\n    _uniques = helpers.uniques;\r\n\r\n/**\r\n * Wrap an element in a classlist-like object such that it can add and remove classes\r\n * in a manner compatible with ie8+ \r\n * \r\n * @param {Node} element - The element to wrap in a classlist object so it can use `.add()`, `.remove()`\r\n * etc. \r\n * \r\n * @return {object} The API that acts entirely on the element provided. \r\n */\r\nfunction classlist(element) {\r\n  var classes = element.className,\r\n      list    = classes.replace(/ +/g, \" \").split(\" \");\r\n      \r\n  function _contains(cls) {\r\n    return list.indexOf(cls) > -1;\r\n  }\r\n\r\n  function _set(cls) {\r\n    element.className = cls.join(\" \").trim();\r\n\r\n    return element; \r\n  }\r\n\r\n  // TODO: support native classList if available\r\n  function _add(cls) {\r\n    // Passed in classes split into an array\r\n    var individuals = cls.split(\" \");\r\n\r\n    return _set(_uniques(list.concat(individuals)));\r\n  }\r\n\r\n  // Remove classes from an element \r\n  // TODO: support native classList if available\r\n  function _remove(cls) {\r\n    var individuals = _uniques(cls.split(\" \"));\r\n\r\n    _each(individuals, function(classname) {\r\n      var at; \r\n      \r\n     if(_contains(classname)) {\r\n        at = list.indexOf(classname);\r\n\r\n        list.splice(at, 1);\r\n      }\r\n    });\r\n\r\n    _set(list);\r\n  }\r\n\r\n  return {\r\n    add    : _add,\r\n    remove : _remove,\r\n    has    : _contains\r\n  };\r\n}\r\n\r\nexport default classlist; \r\n",
+    "___id": "T000002R000003",
+    "___s": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "_each",
+    "memberof": "src/js/classlist.js",
+    "longname": "src/js/classlist.js~_each",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/classlist.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "___id": "T000002R000004",
+    "___s": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "classlist",
+    "memberof": "src/js/classlist.js",
+    "longname": "src/js/classlist.js~classlist",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/classlist.js",
+    "importStyle": "classlist",
+    "description": "Wrap an element in a classlist-like object such that it can add and remove classes\nin a manner compatible with ie8+ ",
+    "lineNumber": 15,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to wrap in a classlist object so it can use <code>.add()</code>, <code>.remove()</code>\netc.</p>\n",
+        "descriptionRaw": "The element to wrap in a classlist object so it can use `.add()`, `.remove()`\netc."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "object"
+      ],
+      "spread": false,
+      "description": "<p>The API that acts entirely on the element provided.</p>\n",
+      "descriptionRaw": "The API that acts entirely on the element provided."
+    },
+    "generator": false,
+    "___id": "T000002R000005",
+    "___s": true
+  },
+  {
+    "__docId__": 4,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/dom.js",
+    "memberof": null,
+    "longname": "src/js/dom.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 4,
+    "content": "/**\r\n * @module DOM\r\n */\r\nimport helpers from \"./internal/helpers\";\r\n\r\nvar _elements = helpers.elements,\r\n    _exclude  = helpers.exclude,\r\n    _unwrap   = helpers.unwrap;\r\n\r\n/**\r\n * Finds an element by selector within a context. If child elements in \r\n * element match selector, they are added to the return result\r\n * \r\n * @param {Node} element - The element to search for children inside of\r\n * @param {string} selector - The CSS selector to match elements against\r\n * \r\n * @returns {array|Node} A single element or collection of elements that match the query\r\n */\r\nexport function find(element, selector) {\r\n  return _unwrap(_elements(element.querySelectorAll(selector)));\r\n}\r\n\r\n/**\r\n * Finds an element by selector within the context of context (document.body \r\n * if no context is supplied). This is a bare-bones analog of jQuery's `$()`\r\n * \r\n * @param {string} selector - The CSS selector to match elements against\r\n * @param {Node} context - The element to search inside of\r\n * \r\n * @returns {array|Node} A single element or collection of elements that match the query\r\n */\r\nexport function query(selector, context = document.body) {\r\n  return (selector === \"body\") ? context : find(context, selector);\r\n}\r\n\r\n// find the closest element that matches (includes self)\r\n/**\r\n * Finds the closest parent element of element that matches selector\r\n * starting with the element this function was passed\r\n * \r\n * @param {Node} element - The element from which to begin the search\r\n * @param {string} selector - The CSS selector to match elements against\r\n * \r\n * @returns {Node} The first ancestor element that matches the query\r\n */\r\nexport function closest(element, selector) {\r\n  var current  = element;\r\n\r\n  // Keep looking up the DOM if our current element doesn't match, stop at <html>\r\n  while(current.matches && !current.matches(selector) && current.tagName !== \"HTML\") {\r\n    current = parent(current);\r\n  }\r\n\r\n  return (current.matches(selector)) ? current : [];\r\n}\r\n\r\n/**\r\n * Returns the immediate parent of a given node\r\n * \r\n * @param {Node} element - The element from which to return a parent\r\n * \r\n * @return {Node} element - The parent element of the element passed in\r\n */\r\nexport function parent(element) {\r\n  return element.parentNode;\r\n}\r\n\r\n/**\r\n * Returns an array of children of the passed in element. Will return a single element\r\n * if the array contains only one child. \r\n * \r\n * @param {Node} element - The element from which to retrieve children\r\n * \r\n * @return {array|Node} element - The children of element\r\n */\r\nexport function children(element) {\r\n  return _unwrap(_elements(element.childNodes));\r\n}\r\n\r\n/**\r\n * Returns siblings of a given node. If a selector is specified, it will\r\n * return only the siblings that match that selector. \r\n * \r\n * @param {Node} element - The element from which to return a parent\r\n * @param {string} selector - the selector to match elements against\r\n * \r\n * @return {array|Node} element - The sibling(s) of the element passed in. \r\n */\r\nexport function siblings(element, selector) {\r\n  var result = selector ? _exclude(find(parent(element), selector), element) :\r\n                          _exclude(children(parent(element)), element);\r\n  \r\n  return _unwrap(result);\r\n}\r\n\r\nexport default {\r\n  query, \r\n  find,\r\n  closest,\r\n  parent,\r\n  children,\r\n  siblings\r\n};\r\n",
+    "___id": "T000002R000006",
+    "___s": true
+  },
+  {
+    "__docId__": 5,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "_elements",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~_elements",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "___id": "T000002R000007",
+    "___s": true
+  },
+  {
+    "__docId__": 6,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "find",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~find",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{find}",
+    "description": "Finds an element by selector within a context. If child elements in \nelement match selector, they are added to the return result",
+    "lineNumber": 19,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{array|Node} A single element or collection of elements that match the query"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to search for children inside of</p>\n",
+        "descriptionRaw": "The element to search for children inside of"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "selector",
+        "description": "<p>The CSS selector to match elements against</p>\n",
+        "descriptionRaw": "The CSS selector to match elements against"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array",
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>A single element or collection of elements that match the query</p>\n",
+      "descriptionRaw": "A single element or collection of elements that match the query"
+    },
+    "generator": false,
+    "___id": "T000002R000008",
+    "___s": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "query",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~query",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{query}",
+    "description": "Finds an element by selector within the context of context (document.body \nif no context is supplied). This is a bare-bones analog of jQuery's `$()`",
+    "lineNumber": 32,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{array|Node} A single element or collection of elements that match the query"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "selector",
+        "description": "<p>The CSS selector to match elements against</p>\n",
+        "descriptionRaw": "The CSS selector to match elements against"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "context",
+        "description": "<p>The element to search inside of</p>\n",
+        "descriptionRaw": "The element to search inside of"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array",
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>A single element or collection of elements that match the query</p>\n",
+      "descriptionRaw": "A single element or collection of elements that match the query"
+    },
+    "generator": false,
+    "___id": "T000002R000009",
+    "___s": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "closest",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~closest",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{closest}",
+    "description": "Finds the closest parent element of element that matches selector\nstarting with the element this function was passed",
+    "lineNumber": 46,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Node} The first ancestor element that matches the query"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element from which to begin the search</p>\n",
+        "descriptionRaw": "The element from which to begin the search"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "selector",
+        "description": "<p>The CSS selector to match elements against</p>\n",
+        "descriptionRaw": "The CSS selector to match elements against"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The first ancestor element that matches the query</p>\n",
+      "descriptionRaw": "The first ancestor element that matches the query"
+    },
+    "generator": false,
+    "___id": "T000002R000010",
+    "___s": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "parent",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~parent",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{parent}",
+    "description": "Returns the immediate parent of a given node",
+    "lineNumber": 64,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element from which to return a parent</p>\n",
+        "descriptionRaw": "The element from which to return a parent"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>element - The parent element of the element passed in</p>\n",
+      "descriptionRaw": "element - The parent element of the element passed in"
+    },
+    "generator": false,
+    "___id": "T000002R000011",
+    "___s": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "children",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~children",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{children}",
+    "description": "Returns an array of children of the passed in element. Will return a single element\nif the array contains only one child. ",
+    "lineNumber": 76,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element from which to retrieve children</p>\n",
+        "descriptionRaw": "The element from which to retrieve children"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array",
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>element - The children of element</p>\n",
+      "descriptionRaw": "element - The children of element"
+    },
+    "generator": false,
+    "___id": "T000002R000012",
+    "___s": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "siblings",
+    "memberof": "src/js/dom.js",
+    "longname": "src/js/dom.js~siblings",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/dom.js",
+    "importStyle": "{siblings}",
+    "description": "Returns siblings of a given node. If a selector is specified, it will\nreturn only the siblings that match that selector. ",
+    "lineNumber": 89,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element from which to return a parent</p>\n",
+        "descriptionRaw": "The element from which to return a parent"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "selector",
+        "description": "<p>the selector to match elements against</p>\n",
+        "descriptionRaw": "the selector to match elements against"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array",
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>element - The sibling(s) of the element passed in.</p>\n",
+      "descriptionRaw": "element - The sibling(s) of the element passed in."
+    },
+    "generator": false,
+    "___id": "T000002R000013",
+    "___s": true
+  },
+  {
+    "__docId__": 12,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/element.js",
+    "memberof": null,
+    "longname": "src/js/element.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 4,
+    "content": "/**\r\n * @module element\r\n */\r\nimport classlist from \"./classlist\";\r\nimport dom from \"./dom\";\r\n\r\n/**\r\n * a getter/setter function that modifies attributes on elements. \r\n * \r\n * @param {Node} element - The element to set attributes on\r\n * @param {string} attribute - The attribute to either retrieve or replace with a value\r\n * @param {string} [val] - The value to set, if any\r\n * \r\n * @returns undefined\r\n */\r\nexport function attr(element, attribute, val) {\r\n  var setting = Object.prototype.toString.call(val) !== \"[object Undefined]\";\r\n\r\n  return setting ? element.setAttribute(attribute, val) : \r\n                   element.getAttribute(attribute);\r\n}\r\n\r\n/**\r\n * a function to remove attributes on elements\r\n * \r\n * @param {Node} element - The element to remove attributes from\r\n * @param {string} attribute - The attribute on the element to remove\r\n * \r\n * @returns undefined\r\n */\r\nexport function removeAttr(element, attribute) {\r\n  return element.removeAttribute(attribute);\r\n}\r\n\r\n/**\r\n * a function to retrieve or set the value of a form element. \r\n * \r\n * @param {Node} element - The element on which to retrieve or set the value\r\n * @param {string|boolean|number} [val] - The value to set (or retrieve) as the elements value \r\n * \r\n * @returns {number|string} The value of the element\r\n */\r\nexport function value(element, val) {\r\n  element.value = (val || element.value);\r\n\r\n  return element.value; \r\n}\r\n\r\n/**\r\n * A function that adds a class to the element provided using a \r\n * polyfill wrapper for Element.classlist\r\n * @see classList\r\n * \r\n * @param {Node} element - The element on which to add one (or many, space separated) class(es)\r\n * @param {string} classes - The classes to add to the element\r\n * \r\n * @return {Node} The element on which the class was set\r\n */\r\nexport function addClass(element, classes) {\r\n  classlist(element).add(classes);\r\n}\r\n\r\n/**\r\n * A function that removes a class from the element provided using a\r\n * polyfill wrapper for Element.classlist\r\n * @see classList\r\n * \r\n * @param {Node} element - The element on which to remove one (or many, space separated) class(es)\r\n * @param {string} classes - The classes to remove from the element\r\n * \r\n * @return {Node} The element on which the class was set\r\n */\r\nexport function removeClass(element, classes) {\r\n  classlist(element).remove(classes);\r\n}\r\n\r\n/**\r\n * A function to set inline CSS properties onto an element\r\n * @see classList\r\n * \r\n * @example\r\n * var div = document.createElement(\"div\");\r\n * \r\n * css(div, {\r\n *   background: blue,\r\n *   fontSize: \"18px\"\r\n * });\r\n * \r\n * //The div will now have inline styles of:\r\n * // - font-size: 18px;\r\n * // - background: blue; \r\n * \r\n * @param {Node} element - The element on which to remove one (or many, space separated) class(es)\r\n * @param {object} styles - The styles, in camel-case (if applicable), to set on the element\r\n * \r\n * @return {Node} The element on which the class was set\r\n */\r\nexport function css(element, styles) {\r\n  var rule,\r\n      val; \r\n\r\n  for(rule in styles) {\r\n    val = styles[rule];\r\n    element.style[rule] = val; \r\n  }\r\n\r\n  return element; \r\n}\r\n\r\n/**\r\n * Append a child node to the end of an element's children\r\n * \r\n * @param {Node} element - The element to append a child to\r\n * @param {Node} appendee - The element that will be moved or appended to the \r\n * new parent element\r\n * \r\n * @return {Node} The element that was appended to the parent\r\n */\r\nexport function append(element, appendee) {\r\n  return element.appendChild(appendee);\r\n}\r\n\r\n/**\r\n * Append a child node to the beginning of an element's children\r\n * \r\n * @param {Node} element - The element to prepend a child to\r\n * @param {Node} prependee - The element that will be moved or prepended to the \r\n * new parent element\r\n * \r\n * @return {Node} The element that was prepended to the parent\r\n */\r\nexport function prepend(element, prependee) {\r\n  return element.insertBefore(prependee, element.firstChild);\r\n}\r\n\r\n/**\r\n * Utility to empty elements child contents completely via `innerHTML`\r\n * \r\n * @param {Node} element - The element to empty\r\n * \r\n * @return {Node} The newly emptied element. \r\n */\r\nexport function empty(element) {\r\n  element.innerHTML = \"\"; \r\n\r\n  return element; \r\n}\r\n\r\n/**\r\n * Clones a node, optionally deep clones the node to also clone its children\r\n * \r\n * @param {Node} element - The element to clone\r\n * @param {boolean} [deep=false] - The flag to determine whether or not the copy is deep \r\n * \r\n * @return The newly cloned node\r\n */\r\nexport function clone(element, deep) {\r\n  return element.cloneNode(deep); \r\n}\r\n\r\n/**\r\n * Removes a node from the DOM\r\n * \r\n * @param {Node} element - The element to remove from the DOM. \r\n * \r\n * @return {Node} The newly removed element\r\n */\r\nexport function remove(element) {\r\n  return dom.parent(element).removeChild(element);\r\n}\r\n\r\nexport default {\r\n  attr,\r\n  removeAttr,\r\n  value,\r\n  addClass,\r\n  removeClass,\r\n  css,\r\n  append,\r\n  prepend,\r\n  empty, \r\n  clone,\r\n  remove\r\n};\r\n",
+    "___id": "T000002R000014",
+    "___s": true
+  },
+  {
+    "__docId__": 13,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "attr",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~attr",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{attr}",
+    "description": "a getter/setter function that modifies attributes on elements. ",
+    "lineNumber": 16,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "undefined"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to set attributes on</p>\n",
+        "descriptionRaw": "The element to set attributes on"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "attribute",
+        "description": "<p>The attribute to either retrieve or replace with a value</p>\n",
+        "descriptionRaw": "The attribute to either retrieve or replace with a value"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "val",
+        "description": "<p>The value to set, if any</p>\n",
+        "descriptionRaw": "The value to set, if any"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "<p>undefined</p>\n",
+      "descriptionRaw": "undefined"
+    },
+    "generator": false,
+    "___id": "T000002R000015",
+    "___s": true
+  },
+  {
+    "__docId__": 14,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "removeAttr",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~removeAttr",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{removeAttr}",
+    "description": "a function to remove attributes on elements",
+    "lineNumber": 31,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "undefined"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to remove attributes from</p>\n",
+        "descriptionRaw": "The element to remove attributes from"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "attribute",
+        "description": "<p>The attribute on the element to remove</p>\n",
+        "descriptionRaw": "The attribute on the element to remove"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "<p>undefined</p>\n",
+      "descriptionRaw": "undefined"
+    },
+    "generator": false,
+    "___id": "T000002R000016",
+    "___s": true
+  },
+  {
+    "__docId__": 15,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~value",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{value}",
+    "description": "a function to retrieve or set the value of a form element. ",
+    "lineNumber": 43,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{number|string} The value of the element"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element on which to retrieve or set the value</p>\n",
+        "descriptionRaw": "The element on which to retrieve or set the value"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string",
+          "boolean",
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "val",
+        "description": "<p>The value to set (or retrieve) as the elements value</p>\n",
+        "descriptionRaw": "The value to set (or retrieve) as the elements value"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "number",
+        "string"
+      ],
+      "spread": false,
+      "description": "<p>The value of the element</p>\n",
+      "descriptionRaw": "The value of the element"
+    },
+    "generator": false,
+    "___id": "T000002R000017",
+    "___s": true
+  },
+  {
+    "__docId__": 16,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "addClass",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~addClass",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{addClass}",
+    "description": "A function that adds a class to the element provided using a \npolyfill wrapper for Element.classlist",
+    "see": [
+      "<a href=\"classList\">classList</a>"
+    ],
+    "lineNumber": 59,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element on which to add one (or many, space separated) class(es)</p>\n",
+        "descriptionRaw": "The element on which to add one (or many, space separated) class(es)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "classes",
+        "description": "<p>The classes to add to the element</p>\n",
+        "descriptionRaw": "The classes to add to the element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element on which the class was set</p>\n",
+      "descriptionRaw": "The element on which the class was set"
+    },
+    "generator": false,
+    "___id": "T000002R000018",
+    "___s": true
+  },
+  {
+    "__docId__": 17,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "removeClass",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~removeClass",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{removeClass}",
+    "description": "A function that removes a class from the element provided using a\npolyfill wrapper for Element.classlist",
+    "see": [
+      "<a href=\"classList\">classList</a>"
+    ],
+    "lineNumber": 73,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element on which to remove one (or many, space separated) class(es)</p>\n",
+        "descriptionRaw": "The element on which to remove one (or many, space separated) class(es)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "classes",
+        "description": "<p>The classes to remove from the element</p>\n",
+        "descriptionRaw": "The classes to remove from the element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element on which the class was set</p>\n",
+      "descriptionRaw": "The element on which the class was set"
+    },
+    "generator": false,
+    "___id": "T000002R000019",
+    "___s": true
+  },
+  {
+    "__docId__": 18,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "css",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~css",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{css}",
+    "description": "A function to set inline CSS properties onto an element",
+    "examples": [
+      "var div = document.createElement(\"div\");\n\ncss(div, {\n  background: blue,\n  fontSize: \"18px\"\n});\n\n//The div will now have inline styles of:\n// - font-size: 18px;\n// - background: blue; "
+    ],
+    "see": [
+      "<a href=\"classList\">classList</a>"
+    ],
+    "lineNumber": 98,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element on which to remove one (or many, space separated) class(es)</p>\n",
+        "descriptionRaw": "The element on which to remove one (or many, space separated) class(es)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "styles",
+        "description": "<p>The styles, in camel-case (if applicable), to set on the element</p>\n",
+        "descriptionRaw": "The styles, in camel-case (if applicable), to set on the element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element on which the class was set</p>\n",
+      "descriptionRaw": "The element on which the class was set"
+    },
+    "generator": false,
+    "___id": "T000002R000020",
+    "___s": true
+  },
+  {
+    "__docId__": 19,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "append",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~append",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{append}",
+    "description": "Append a child node to the end of an element's children",
+    "lineNumber": 119,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to append a child to</p>\n",
+        "descriptionRaw": "The element to append a child to"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "appendee",
+        "description": "<p>The element that will be moved or appended to the \nnew parent element</p>\n",
+        "descriptionRaw": "The element that will be moved or appended to the \nnew parent element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element that was appended to the parent</p>\n",
+      "descriptionRaw": "The element that was appended to the parent"
+    },
+    "generator": false,
+    "___id": "T000002R000021",
+    "___s": true
+  },
+  {
+    "__docId__": 20,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "prepend",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~prepend",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{prepend}",
+    "description": "Append a child node to the beginning of an element's children",
+    "lineNumber": 132,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to prepend a child to</p>\n",
+        "descriptionRaw": "The element to prepend a child to"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "prependee",
+        "description": "<p>The element that will be moved or prepended to the \nnew parent element</p>\n",
+        "descriptionRaw": "The element that will be moved or prepended to the \nnew parent element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element that was prepended to the parent</p>\n",
+      "descriptionRaw": "The element that was prepended to the parent"
+    },
+    "generator": false,
+    "___id": "T000002R000022",
+    "___s": true
+  },
+  {
+    "__docId__": 21,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "empty",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~empty",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{empty}",
+    "description": "Utility to empty elements child contents completely via `innerHTML`",
+    "lineNumber": 143,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to empty</p>\n",
+        "descriptionRaw": "The element to empty"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The newly emptied element.</p>\n",
+      "descriptionRaw": "The newly emptied element."
+    },
+    "generator": false,
+    "___id": "T000002R000023",
+    "___s": true
+  },
+  {
+    "__docId__": 22,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "clone",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~clone",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{clone}",
+    "description": "Clones a node, optionally deep clones the node to also clone its children",
+    "lineNumber": 157,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to clone</p>\n",
+        "descriptionRaw": "The element to clone"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "deep",
+        "description": "<p>The flag to determine whether or not the copy is deep</p>\n",
+        "descriptionRaw": "The flag to determine whether or not the copy is deep"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "<p>The newly cloned node</p>\n",
+      "descriptionRaw": "The newly cloned node"
+    },
+    "generator": false,
+    "___id": "T000002R000024",
+    "___s": true
+  },
+  {
+    "__docId__": 23,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "remove",
+    "memberof": "src/js/element.js",
+    "longname": "src/js/element.js~remove",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/element.js",
+    "importStyle": "{remove}",
+    "description": "Removes a node from the DOM",
+    "lineNumber": 168,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to remove from the DOM.</p>\n",
+        "descriptionRaw": "The element to remove from the DOM."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The newly removed element</p>\n",
+      "descriptionRaw": "The newly removed element"
+    },
+    "generator": false,
+    "___id": "T000002R000025",
+    "___s": true
+  },
+  {
+    "__docId__": 24,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/event.js",
+    "memberof": null,
+    "longname": "src/js/event.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 2,
+    "content": "/* eslint-disable */\r\nfunction add(element, type, handler) {\r\n  var listen = element.addEventListener,\r\n      eKey;\r\n\r\n  // If this is ie8, which doesn't support addEventListener\r\n  // create an event with attachEvent. \r\n  if(!listen) {\r\n    eKey = \"event-\" + type + handler;\r\n    element[eKey] = handler;\r\n\r\n    element[type + handler] = function() {\r\n      element[eKey](window.event);\r\n    }\r\n\r\n    element.attachEvent(\"on\" + type, handler, false); \r\n\r\n    return; \r\n  }\r\n\r\n  listen(type, handler);\r\n}\r\n\r\nfunction remove(element, type, handler) {\r\n  var unlisten = element.removeEventListener;\r\n\r\n  // If this is ie8, which doesn't support removeEventListener\r\n  // create an event with detachEvent. \r\n  if(!unlisten) {\r\n    element.detachEvent(\"on\" + type, element[type + handler]);\r\n    element[type + handler] = null; \r\n\r\n    return;\r\n  }\r\n\r\n  unlisten(type, handler);\r\n}\r\n\r\nfunction on(element, type, target, handler) {\r\n  var listen = element.addEventListener;\r\n\r\n\r\n  if(typeof target === \"function\" && !handler) {\r\n    add(element, type, handler);\r\n  }\r\n\r\n  listen(type, function(e) {\r\n    _inspect(e, target, handler);\r\n  });\r\n\r\n}\r\n\r\nfunction delegate() {\r\n  return on.apply(this, arguments);\r\n}\r\n\r\nfunction _inspect(e, target, handler) {\r\n  var current = e.target;\r\n\r\n  if(current.matches(target) && current !== window) {\r\n    handler.call(current, e);\r\n  }\r\n}\r\n",
+    "___id": "T000002R000026",
+    "___s": true
+  },
+  {
+    "__docId__": 25,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "add",
+    "memberof": "src/js/event.js",
+    "longname": "src/js/event.js~add",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/event.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "undocument": true,
+    "params": [
+      {
+        "name": "element",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "handler",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false,
+    "___id": "T000002R000027",
+    "___s": true
+  },
+  {
+    "__docId__": 26,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "remove",
+    "memberof": "src/js/event.js",
+    "longname": "src/js/event.js~remove",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/event.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "params": [
+      {
+        "name": "element",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "handler",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false,
+    "___id": "T000002R000028",
+    "___s": true
+  },
+  {
+    "__docId__": 27,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "on",
+    "memberof": "src/js/event.js",
+    "longname": "src/js/event.js~on",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/event.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 39,
+    "undocument": true,
+    "params": [
+      {
+        "name": "element",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "target",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "handler",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false,
+    "___id": "T000002R000029",
+    "___s": true
+  },
+  {
+    "__docId__": 28,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "delegate",
+    "memberof": "src/js/event.js",
+    "longname": "src/js/event.js~delegate",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/event.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 53,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false,
+    "___id": "T000002R000030",
+    "___s": true
+  },
+  {
+    "__docId__": 29,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_inspect",
+    "memberof": "src/js/event.js",
+    "longname": "src/js/event.js~_inspect",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/event.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 57,
+    "undocument": true,
+    "params": [
+      {
+        "name": "e",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "target",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "handler",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false,
+    "___id": "T000002R000031",
+    "___s": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/internal/helpers.js",
+    "memberof": null,
+    "longname": "src/js/internal/helpers.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "content": "/**\r\n * A for-each loop type function that can be run on arrays, it begins from the end of the list for the \r\n * reason that it makes the burden on duplicate removal using indexOf far lighter. IE8 doesn't support Array.forEach\r\n * so this fulfills that functionality. \r\n * \r\n * @param {array} collection - The array to run `fn` against\r\n * @param {function} fn - The function that accepts each element, index, and the collection itself. \r\n * \r\n * @return {undefined} undefined. \r\n */\r\nfunction _each(collection, fn) {\r\n  var i,\r\n      size = collection.length;\r\n\r\n  for(i = size - 1; i >= 0; i--) {\r\n    fn(collection[i], i, collection);\r\n  }\r\n\r\n  return undefined; \r\n}\r\n\r\n/**\r\n * A function that runs along an array and returns only unique values\r\n * \r\n * @param {array} collection - The array to filter for uniques\r\n * \r\n * @return {array} A new array containing the unique elements from `collection`. \r\n */\r\nfunction _uniques(collection) {\r\n  var at;\r\n\r\n  _each(collection, function(item, index, items) {\r\n    at = items.indexOf(item);\r\n\r\n    if(at !== index) {\r\n      collection.splice(index, 1);\r\n    }\r\n  });\r\n\r\n  return collection; \r\n}\r\n\r\n/**\r\n * Excludes an element from an array\r\n * \r\n * @param {array} collection - The array to search through for exclusions\r\n * @param {any} item - The function that accepts each element, index, and the collection itself. \r\n * \r\n * @return {array} the collection without the specified item\r\n */\r\nfunction _exclude(collection, item) {\r\n  var at = collection.indexOf(item);\r\n\r\n  if(at > -1) {\r\n    collection.splice(at, 1);\r\n  }\r\n\r\n  return collection;  \r\n}\r\n\r\n/**\r\n * Unwraps an element from an array if it's the only element in the array. This was created\r\n * to allow selectors that match to only a single DOM element to be interactive without having to\r\n * grab the first element of the returned collection array. \r\n * \r\n * @param {array} collection - The array of data\r\n * \r\n * @return {any|array} the item as-is or an array of items\r\n */\r\nfunction _unwrap(collection) {\r\n  return collection.length === 1 ? collection[0] : collection; \r\n}\r\n\r\n/**\r\n * Returns all nodes of an array collection. This function can also be used generically for \r\n * almost any data type, but it should only be used with DOM elements. \r\n * \r\n * @param {array} collection - The array to search through for child Nodes\r\n * \r\n * @return {array} the collection of all Nodes. \r\n */\r\nfunction _nodes(collection) {\r\n  var nodes = [];\r\n\r\n  _each(collection, function(node) {\r\n    nodes.unshift(node);\r\n  });\r\n\r\n  return nodes; \r\n}\r\n\r\n/**\r\n * Filters Element nodes of an array of Nodes. This filters out every node that is NOT and element node\r\n * (e.g. TextNode, CommentNode, AttributeNode, etc.) \r\n * \r\n * @param {array} collection - The array to search through for elements\r\n * \r\n * @return {array} a new array containing only elements\r\n */\r\nfunction _elements(collection) {\r\n  var nodes    = _nodes(collection),\r\n      elements = [],\r\n      ELEMENT  = 1; // Element node ID.   \r\n\r\n  _each(nodes, function(node) {\r\n    if(node.nodeType === ELEMENT) {\r\n      elements.unshift(node);\r\n    }\r\n  });\r\n\r\n  return elements;\r\n}\r\n\r\nexport default {\r\n  each     : _each,\r\n  uniques  : _uniques,\r\n  exclude  : _exclude,\r\n  unwrap   : _unwrap,\r\n  nodes    : _nodes,\r\n  elements : _elements\r\n};\r\n",
+    "___id": "T000002R000032",
+    "___s": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_each",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_each",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "A for-each loop type function that can be run on arrays, it begins from the end of the list for the \nreason that it makes the burden on duplicate removal using indexOf far lighter. IE8 doesn't support Array.forEach\nso this fulfills that functionality. ",
+    "lineNumber": 11,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array to run `fn` against"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fn",
+        "description": "The function that accepts each element, index, and the collection itself."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "undefined"
+      ],
+      "spread": false,
+      "description": "undefined."
+    },
+    "generator": false,
+    "___id": "T000002R000033",
+    "___s": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_uniques",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_uniques",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "A function that runs along an array and returns only unique values",
+    "lineNumber": 29,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array to filter for uniques"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array"
+      ],
+      "spread": false,
+      "description": "A new array containing the unique elements from `collection`."
+    },
+    "generator": false,
+    "___id": "T000002R000034",
+    "___s": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_exclude",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_exclude",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "Excludes an element from an array",
+    "lineNumber": 51,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array to search through for exclusions"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "any"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "item",
+        "description": "The function that accepts each element, index, and the collection itself."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array"
+      ],
+      "spread": false,
+      "description": "the collection without the specified item"
+    },
+    "generator": false,
+    "___id": "T000002R000035",
+    "___s": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_unwrap",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_unwrap",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "Unwraps an element from an array if it's the only element in the array. This was created\nto allow selectors that match to only a single DOM element to be interactive without having to\ngrab the first element of the returned collection array. ",
+    "lineNumber": 70,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array of data"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "any",
+        "array"
+      ],
+      "spread": false,
+      "description": "the item as-is or an array of items"
+    },
+    "generator": false,
+    "___id": "T000002R000036",
+    "___s": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_nodes",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_nodes",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "Returns all nodes of an array collection. This function can also be used generically for \nalmost any data type, but it should only be used with DOM elements. ",
+    "lineNumber": 82,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array to search through for child Nodes"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array"
+      ],
+      "spread": false,
+      "description": "the collection of all Nodes."
+    },
+    "generator": false,
+    "___id": "T000002R000037",
+    "___s": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_elements",
+    "memberof": "src/js/internal/helpers.js",
+    "longname": "src/js/internal/helpers.js~_elements",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/internal/helpers.js",
+    "importStyle": null,
+    "description": "Filters Element nodes of an array of Nodes. This filters out every node that is NOT and element node\n(e.g. TextNode, CommentNode, AttributeNode, etc.) ",
+    "lineNumber": 100,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "collection",
+        "description": "The array to search through for elements"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "array"
+      ],
+      "spread": false,
+      "description": "a new array containing only elements"
+    },
+    "generator": false,
+    "___id": "T000002R000038",
+    "___s": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/markup.js",
+    "memberof": null,
+    "longname": "src/js/markup.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 4,
+    "content": "/**\r\n * @module markup\r\n */\r\nimport helpers from \"./internal/helpers\";\r\nimport elem from \"./element\";\r\n\r\nvar _each     = helpers.each,\r\n    _elements = helpers.elements,\r\n\r\n    append    = elem.append,\r\n    empty     = elem.empty;\r\n\r\n/**\r\n * Create html markup in a manner similar to jQuery's usage of\r\n * $(\"<div></div>\") et. al. \r\n * \r\n * @param {string} markup - The html markup you'd like to have created\r\n * \r\n * \r\n * @return {Node|DocumentFragment} The result of your HTML input, appendable to the DOM.\r\n */\r\nexport function create(markup) {\r\n  var fragment  = document.createDocumentFragment(), \r\n      container = document.createElement(\"div\"); \r\n  \r\n  container.innerHTML = _normalize(markup);\r\n\r\n  _each(_elements(container.childNodes), function(element) {\r\n    append(fragment, element);\r\n  });\r\n\r\n  return fragment;\r\n}\r\n\r\n/**\r\n * A functional style mirror of jQuery's `html()`. This function will \r\n * create markup if `markup` is specified, and will retrieve markup if only\r\n * `element` is provided. \r\n * \r\n * @param {Node} element - The element to either set or retrieve html to/from\r\n * @param {Node} markup - The markup to assign to this element's `innerHTML`\r\n * \r\n * @return {Node} The element that was appended to the parent\r\n */\r\nexport function html(element, markup) {\r\n  if(markup) {\r\n    empty(element);\r\n    append(element, create(markup));\r\n  }\r\n  \r\n  return _normalize(element.innerHTML); \r\n}\r\n\r\n/**\r\n * Sets an elements `textContent`\r\n * \r\n * @param {Node} element - The element on which to retrieve or set text\r\n * @param {string|number} [content] - The content to set for the element's text value\r\n */\r\nexport function text(element, content) {\r\n  var prop = element.textContent ? \"textContent\" : \"innerText\";\r\n\r\n  if(content) {\r\n    element[prop] = content; \r\n  }\r\n \r\n  return element[prop]; \r\n}\r\n\r\n/**\r\n * Helper function to remove excess space between html tags\r\n * @private\r\n * @param {Node} markup - The markup to sanitize for spaces. \r\n * \r\n * @return {string} The normalized markup with no extraneous spaces. \r\n */\r\nfunction _normalize(markup) {\r\n  return markup.replace(/\\> +\\</g, \"><\");\r\n}\r\n\r\nexport default {\r\n  create : create,\r\n  html   : html,\r\n  text   : text\r\n};\r\n",
+    "___id": "T000002R000039",
+    "___s": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "_each",
+    "memberof": "src/js/markup.js",
+    "longname": "src/js/markup.js~_each",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/markup.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "___id": "T000002R000040",
+    "___s": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "create",
+    "memberof": "src/js/markup.js",
+    "longname": "src/js/markup.js~create",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/markup.js",
+    "importStyle": "{create}",
+    "description": "Create html markup in a manner similar to jQuery's usage of\n$(\"<div></div>\") et. al. ",
+    "lineNumber": 22,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "markup",
+        "description": "<p>The html markup you&#39;d like to have created</p>\n",
+        "descriptionRaw": "The html markup you'd like to have created"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node",
+        "DocumentFragment"
+      ],
+      "spread": false,
+      "description": "<p>The result of your HTML input, appendable to the DOM.</p>\n",
+      "descriptionRaw": "The result of your HTML input, appendable to the DOM."
+    },
+    "generator": false,
+    "___id": "T000002R000041",
+    "___s": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "html",
+    "memberof": "src/js/markup.js",
+    "longname": "src/js/markup.js~html",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/markup.js",
+    "importStyle": "{html}",
+    "description": "A functional style mirror of jQuery's `html()`. This function will \ncreate markup if `markup` is specified, and will retrieve markup if only\n`element` is provided. ",
+    "lineNumber": 45,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element to either set or retrieve html to/from</p>\n",
+        "descriptionRaw": "The element to either set or retrieve html to/from"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "markup",
+        "description": "<p>The markup to assign to this element&#39;s <code>innerHTML</code></p>\n",
+        "descriptionRaw": "The markup to assign to this element's `innerHTML`"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Node"
+      ],
+      "spread": false,
+      "description": "<p>The element that was appended to the parent</p>\n",
+      "descriptionRaw": "The element that was appended to the parent"
+    },
+    "generator": false,
+    "___id": "T000002R000042",
+    "___s": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "text",
+    "memberof": "src/js/markup.js",
+    "longname": "src/js/markup.js~text",
+    "access": null,
+    "export": true,
+    "importPath": "functional-dom-query/src/js/markup.js",
+    "importStyle": "{text}",
+    "description": "Sets an elements `textContent`",
+    "lineNumber": 60,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "element",
+        "description": "<p>The element on which to retrieve or set text</p>\n",
+        "descriptionRaw": "The element on which to retrieve or set text"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string",
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "content",
+        "description": "<p>The content to set for the element&#39;s text value</p>\n",
+        "descriptionRaw": "The content to set for the element's text value"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false,
+    "___id": "T000002R000043",
+    "___s": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_normalize",
+    "memberof": "src/js/markup.js",
+    "longname": "src/js/markup.js~_normalize",
+    "access": "private",
+    "export": false,
+    "importPath": "functional-dom-query/src/js/markup.js",
+    "importStyle": null,
+    "description": "Helper function to remove excess space between html tags",
+    "lineNumber": 77,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Node"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "markup",
+        "description": "The markup to sanitize for spaces."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The normalized markup with no extraneous spaces."
+    },
+    "generator": false,
+    "___id": "T000002R000044",
+    "___s": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/js/polyfills/polyfills.js",
+    "memberof": null,
+    "longname": "src/js/polyfills/polyfills.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "var helpers = require(\"../internal/helpers\"),\r\n    _each   = helpers.each; \r\n\r\n(function() {\r\n  var indexOf = Array.prototype.indexOf;\r\n\r\n  function _polyfill(item /* , from*/) {\r\n    var self     = this,\r\n        len      = self.length,\r\n        start    = Number(arguments[1]) || 0,\r\n        negative = start < 0, \r\n\r\n        ceiling = Math.ceil,\r\n        floor   = Math.floor;\r\n\r\n    start = (negative) ? ceiling(start) : floor(start);\r\n\r\n    if(negative) {\r\n      start += len;\r\n    }\r\n\r\n    for(; start < len; start++) {\r\n      if(start in this && this[start] === item) {\r\n        return start;\r\n      }\r\n    }\r\n\r\n    return -1;\r\n  }\r\n\r\n  if(!indexOf) {\r\n    Array.prototype.indexOf = _polyfill;\r\n  }\r\n}());\r\n\r\n(function() {  \r\n  var matches = Element.prototype.matches;\r\n\r\n  // Look for other implementations to use\r\n  // Otherwise, just polyfill with a function.\r\n  function _fix() {\r\n    var prefixes = [ \"moz\", \"ms\", \"o\", \"webkit\", \"\" ];\r\n    \r\n    _each(prefixes, function(prefix) {\r\n      var key     = prefix + \"MatchesSelector\",\r\n          current = Element.prototype[key];\r\n\r\n      if(current) {\r\n        matches = current;\r\n\r\n        return; \r\n      }\r\n    });\r\n\r\n    _polyfill();\r\n  }\r\n\r\n  // The polyfill if there aren't other implementations\r\n  function _polyfill() {\r\n    Element.prototype.matches = function(s) {\r\n        var m = (this.document || this.ownerDocument).querySelectorAll(s),\r\n            i = m.length;\r\n\r\n        while(--i >= 0 && m.item(i) !== this) { \r\n          null; \r\n        }\r\n\r\n        return i > -1;            \r\n    };\r\n  }\r\n\r\n  if(!matches) {\r\n    _fix();\r\n  }\r\n}());\r\n\r\n\r\n",
+    "___id": "T000002R000045",
+    "___s": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "helpers",
+    "memberof": "src/js/polyfills/polyfills.js",
+    "longname": "src/js/polyfills/polyfills.js~helpers",
+    "access": null,
+    "export": false,
+    "importPath": "functional-dom-query/src/js/polyfills/polyfills.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "___id": "T000002R000046",
+    "___s": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000047",
+    "___s": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000048",
+    "___s": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000049",
+    "___s": true
+  },
+  {
+    "__docId__": 49,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000050",
+    "___s": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000051",
+    "___s": true
+  },
+  {
+    "__docId__": 51,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000052",
+    "___s": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000053",
+    "___s": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000054",
+    "___s": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000055",
+    "___s": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000056",
+    "___s": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000057",
+    "___s": true
+  },
+  {
+    "__docId__": 57,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000058",
+    "___s": true
+  },
+  {
+    "__docId__": 58,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000059",
+    "___s": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000060",
+    "___s": true
+  },
+  {
+    "__docId__": 60,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000061",
+    "___s": true
+  },
+  {
+    "__docId__": 61,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000062",
+    "___s": true
+  },
+  {
+    "__docId__": 62,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000063",
+    "___s": true
+  },
+  {
+    "__docId__": 63,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000064",
+    "___s": true
+  },
+  {
+    "__docId__": 64,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000065",
+    "___s": true
+  },
+  {
+    "__docId__": 65,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000066",
+    "___s": true
+  },
+  {
+    "__docId__": 66,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000067",
+    "___s": true
+  },
+  {
+    "__docId__": 67,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000068",
+    "___s": true
+  },
+  {
+    "__docId__": 68,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000069",
+    "___s": true
+  },
+  {
+    "__docId__": 69,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000070",
+    "___s": true
+  },
+  {
+    "__docId__": 70,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000071",
+    "___s": true
+  },
+  {
+    "__docId__": 71,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000072",
+    "___s": true
+  },
+  {
+    "__docId__": 72,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000073",
+    "___s": true
+  },
+  {
+    "__docId__": 73,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000074",
+    "___s": true
+  },
+  {
+    "__docId__": 74,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000075",
+    "___s": true
+  },
+  {
+    "__docId__": 75,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000076",
+    "___s": true
+  },
+  {
+    "__docId__": 76,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000077",
+    "___s": true
+  },
+  {
+    "__docId__": 77,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000078",
+    "___s": true
+  },
+  {
+    "__docId__": 78,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000079",
+    "___s": true
+  },
+  {
+    "__docId__": 79,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000080",
+    "___s": true
+  },
+  {
+    "__docId__": 80,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000081",
+    "___s": true
+  },
+  {
+    "__docId__": 81,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000082",
+    "___s": true
+  },
+  {
+    "__docId__": 82,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000083",
+    "___s": true
+  },
+  {
+    "__docId__": 83,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000084",
+    "___s": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000085",
+    "___s": true
+  },
+  {
+    "__docId__": 85,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000086",
+    "___s": true
+  },
+  {
+    "__docId__": 86,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000087",
+    "___s": true
+  },
+  {
+    "__docId__": 87,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000088",
+    "___s": true
+  },
+  {
+    "__docId__": 88,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000089",
+    "___s": true
+  },
+  {
+    "__docId__": 89,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000090",
+    "___s": true
+  },
+  {
+    "__docId__": 90,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000091",
+    "___s": true
+  },
+  {
+    "__docId__": 91,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000092",
+    "___s": true
+  },
+  {
+    "__docId__": 92,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000093",
+    "___s": true
+  },
+  {
+    "__docId__": 94,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000094",
+    "___s": true
+  },
+  {
+    "__docId__": 95,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000095",
+    "___s": true
+  },
+  {
+    "__docId__": 96,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000096",
+    "___s": true
+  },
+  {
+    "__docId__": 97,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000097",
+    "___s": true
+  },
+  {
+    "__docId__": 98,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000098",
+    "___s": true
+  },
+  {
+    "__docId__": 99,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000099",
+    "___s": true
+  },
+  {
+    "__docId__": 100,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000100",
+    "___s": true
+  },
+  {
+    "__docId__": 101,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "builtinExternal": true,
+    "___id": "T000002R000101",
+    "___s": true
+  }
+]

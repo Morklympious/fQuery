@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/js/markup.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/mdl/material.min.css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/mdl/material.override.css">
@@ -100,22 +100,94 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
-<p>I&apos;ve been working on this functional implementation of jQuery.</p>
-<p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
-<ul>
-<li>DOM traversal</li>
-<li>Element modification</li>
-<li>Markup creation</li>
-<li>Events</li>
-</ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
-<h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
-<p><em>It&apos;s even ie8 compatible, too!</em></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/markup.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @module markup
+ */
+import helpers from &quot;./internal/helpers&quot;;
+import elem from &quot;./element&quot;;
+
+var _each     = helpers.each,
+    _elements = helpers.elements,
+
+    append    = elem.append,
+    empty     = elem.empty;
+
+/**
+ * Create html markup in a manner similar to jQuery&apos;s usage of
+ * $(&quot;&lt;div&gt;&lt;/div&gt;&quot;) et. al. 
+ * 
+ * @param {string} markup - The html markup you&apos;d like to have created
+ * 
+ * 
+ * @return {Node|DocumentFragment} The result of your HTML input, appendable to the DOM.
+ */
+export function create(markup) {
+  var fragment  = document.createDocumentFragment(), 
+      container = document.createElement(&quot;div&quot;); 
+  
+  container.innerHTML = _normalize(markup);
+
+  _each(_elements(container.childNodes), function(element) {
+    append(fragment, element);
+  });
+
+  return fragment;
+}
+
+/**
+ * A functional style mirror of jQuery&apos;s `html()`. This function will 
+ * create markup if `markup` is specified, and will retrieve markup if only
+ * `element` is provided. 
+ * 
+ * @param {Node} element - The element to either set or retrieve html to/from
+ * @param {Node} markup - The markup to assign to this element&apos;s `innerHTML`
+ * 
+ * @return {Node} The element that was appended to the parent
+ */
+export function html(element, markup) {
+  if(markup) {
+    empty(element);
+    append(element, create(markup));
+  }
+  
+  return _normalize(element.innerHTML); 
+}
+
+/**
+ * Sets an elements `textContent`
+ * 
+ * @param {Node} element - The element on which to retrieve or set text
+ * @param {string|number} [content] - The content to set for the element&apos;s text value
+ */
+export function text(element, content) {
+  var prop = element.textContent ? &quot;textContent&quot; : &quot;innerText&quot;;
+
+  if(content) {
+    element[prop] = content; 
+  }
+ 
+  return element[prop]; 
+}
+
+/**
+ * Helper function to remove excess space between html tags
+ * @private
+ * @param {Node} markup - The markup to sanitize for spaces. 
+ * 
+ * @return {string} The normalized markup with no extraneous spaces. 
+ */
+function _normalize(markup) {
+  return markup.replace(/\&gt; +\&lt;/g, &quot;&gt;&lt;&quot;);
+}
+
+export default {
+  create : create,
+  html   : html,
+  text   : text
+};
+</code></pre>
+
 </div>
 
 <footer class="footer">

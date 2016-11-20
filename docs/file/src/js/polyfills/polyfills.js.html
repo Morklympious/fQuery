@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/js/polyfills/polyfills.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/mdl/material.min.css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/mdl/material.override.css">
@@ -100,22 +100,86 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
-<p>I&apos;ve been working on this functional implementation of jQuery.</p>
-<p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
-<ul>
-<li>DOM traversal</li>
-<li>Element modification</li>
-<li>Markup creation</li>
-<li>Events</li>
-</ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
-<h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
-<p><em>It&apos;s even ie8 compatible, too!</em></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/polyfills/polyfills.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var helpers = require(&quot;../internal/helpers&quot;),
+    _each   = helpers.each; 
+
+(function() {
+  var indexOf = Array.prototype.indexOf;
+
+  function _polyfill(item /* , from*/) {
+    var self     = this,
+        len      = self.length,
+        start    = Number(arguments[1]) || 0,
+        negative = start &lt; 0, 
+
+        ceiling = Math.ceil,
+        floor   = Math.floor;
+
+    start = (negative) ? ceiling(start) : floor(start);
+
+    if(negative) {
+      start += len;
+    }
+
+    for(; start &lt; len; start++) {
+      if(start in this &amp;&amp; this[start] === item) {
+        return start;
+      }
+    }
+
+    return -1;
+  }
+
+  if(!indexOf) {
+    Array.prototype.indexOf = _polyfill;
+  }
+}());
+
+(function() {  
+  var matches = Element.prototype.matches;
+
+  // Look for other implementations to use
+  // Otherwise, just polyfill with a function.
+  function _fix() {
+    var prefixes = [ &quot;moz&quot;, &quot;ms&quot;, &quot;o&quot;, &quot;webkit&quot;, &quot;&quot; ];
+    
+    _each(prefixes, function(prefix) {
+      var key     = prefix + &quot;MatchesSelector&quot;,
+          current = Element.prototype[key];
+
+      if(current) {
+        matches = current;
+
+        return; 
+      }
+    });
+
+    _polyfill();
+  }
+
+  // The polyfill if there aren&apos;t other implementations
+  function _polyfill() {
+    Element.prototype.matches = function(s) {
+        var m = (this.document || this.ownerDocument).querySelectorAll(s),
+            i = m.length;
+
+        while(--i &gt;= 0 &amp;&amp; m.item(i) !== this) { 
+          null; 
+        }
+
+        return i &gt; -1;            
+    };
+  }
+
+  if(!matches) {
+    _fix();
+  }
+}());
+
+
+</code></pre>
+
 </div>
 
 <footer class="footer">

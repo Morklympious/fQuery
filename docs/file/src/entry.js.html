@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/entry.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/mdl/material.min.css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/mdl/material.override.css">
@@ -100,22 +100,21 @@
 </li>
 </ul></nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="functional-dom-query">Functional Dom Query</h1>
-<p>I&apos;ve been working on this functional implementation of jQuery.</p>
-<p>Except it&apos;s not a functional implementation of jQuery, it&apos;s a functional implementation of:</p>
-<ul>
-<li>DOM traversal</li>
-<li>Element modification</li>
-<li>Markup creation</li>
-<li>Events</li>
-</ul>
-<p>All sort of vaguely in the <em>style</em> of jQuery. The API is very similar in its naming conventions. </p>
-<h2 id="why-">Why?</h2>
-<p>I wanted to make a jQuery-esque implementation that used all of my favorite parts of jQuery without all of the bloat. 
-I typically use jQuery to make traversal of the DOM, element modification, events, etc. a lot easier. </p>
-<p>This is a step in that direction. </p>
-<p><em>It&apos;s even ie8 compatible, too!</em></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/entry.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import element from &quot;./js/element&quot;;
+import dom from &quot;./js/dom&quot;;
+import markup from &quot;./js/markup&quot;;
+
+
+export default {
+  query   : dom.query,
+  dom     : dom,
+  element : element,
+  markup  : markup
+};
+
+</code></pre>
+
 </div>
 
 <footer class="footer">

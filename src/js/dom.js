@@ -1,5 +1,5 @@
 /**
- * @module dom
+ * @module DOM
  */
 import helpers from "./internal/helpers";
 
@@ -16,7 +16,7 @@ var _elements = helpers.elements,
  * 
  * @returns {array|Node} A single element or collection of elements that match the query
  */
-function find(element, selector) {
+export function find(element, selector) {
   return _unwrap(_elements(element.querySelectorAll(selector)));
 }
 
@@ -29,7 +29,7 @@ function find(element, selector) {
  * 
  * @returns {array|Node} A single element or collection of elements that match the query
  */
-function query(selector, context = document.body) {
+export function query(selector, context = document.body) {
   return (selector === "body") ? context : find(context, selector);
 }
 
@@ -43,7 +43,7 @@ function query(selector, context = document.body) {
  * 
  * @returns {Node} The first ancestor element that matches the query
  */
-function closest(element, selector) {
+export function closest(element, selector) {
   var current  = element;
 
   // Keep looking up the DOM if our current element doesn't match, stop at <html>
@@ -61,7 +61,7 @@ function closest(element, selector) {
  * 
  * @return {Node} element - The parent element of the element passed in
  */
-function parent(element) {
+export function parent(element) {
   return element.parentNode;
 }
 
@@ -73,7 +73,7 @@ function parent(element) {
  * 
  * @return {array|Node} element - The children of element
  */
-function children(element) {
+export function children(element) {
   return _unwrap(_elements(element.childNodes));
 }
 
@@ -82,10 +82,11 @@ function children(element) {
  * return only the siblings that match that selector. 
  * 
  * @param {Node} element - The element from which to return a parent
+ * @param {string} selector - the selector to match elements against
  * 
  * @return {array|Node} element - The sibling(s) of the element passed in. 
  */
-function siblings(element, selector) {
+export function siblings(element, selector) {
   var result = selector ? _exclude(find(parent(element), selector), element) :
                           _exclude(children(parent(element)), element);
   
@@ -93,10 +94,10 @@ function siblings(element, selector) {
 }
 
 export default {
-  query    : query, 
-  find     : find,
-  closest  : closest,
-  parent   : parent,
-  children : children,
-  siblings : siblings
+  query, 
+  find,
+  closest,
+  parent,
+  children,
+  siblings
 };
