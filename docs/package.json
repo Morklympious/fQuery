@@ -6,12 +6,12 @@
   "scripts": {
     "build": "rollup --config",
     "develop": "rollup --config --watch",
-    "docs": "jsdoc ./src/**/*.js -t ./node_modules/ink-docstrap/template/ -d ./docs -R ./readme.md",
+    "docs": "esdoc -c esdoc.json",
     "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/morklympious/functional-dom-query.git"
+    "url": "https://github.com/morklympious/fQuery.git"
   },
   "keywords": [
     "DOM",
