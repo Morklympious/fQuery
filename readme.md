@@ -7,9 +7,12 @@ Except it's not a functional implementation of jQuery, it's a functional impleme
 - DOM traversal
 - Element modification
 - Markup creation
-- Events
 
 All sort of vaguely in the _style_ of jQuery. There's a genius in the brevity that Resig and the jQuery team have brought to the way that web developers interact with and modify the DOM. The API for fQuery is very similar in its naming conventions, the only difference being the way that these functions are called. 
+
+## Documentation
+
+Available at https://morklympious.github.io/fQuery
 
 ## Why?
 
