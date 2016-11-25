@@ -5,5 +5,6 @@ module.exports = {
     entry   : "./src/entry.js",
     dest    : "./dist/bundle.js",
     format  : "umd",
+    moduleName : "fQuery",
     plugins : [ buble(), uglify() ]
 };
