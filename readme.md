@@ -12,7 +12,7 @@ All sort of vaguely in the _style_ of jQuery. There's a genius in the brevity th
 
 ## Documentation
 
-Available at https://morklympious.github.io/fQuery
+Available at https://stffrd.github.io/fQuery
 
 ## Why?
 
